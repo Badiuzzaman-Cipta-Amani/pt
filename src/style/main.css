@@ -1,0 +1,390 @@
+@import "tailwindcss";
+
+@theme {
+  --color-primary: #002144;
+  --color-primary-light: #003366;
+  --color-primary-dark: #00152e;
+  --color-secondary: #d4a124;
+  --color-secondary-light: #e8b83a;
+  --color-secondary-dark: #b88a1a;
+  --color-ink: #080c14;
+  --color-ink-soft: #0d1321;
+
+  --font-sans: "Manrope", ui-sans-serif, system-ui, sans-serif;
+  --font-serif: "Lora", Georgia, "Times New Roman", serif;
+
+  /* Readability floor. Tailwind's default ramp bottoms out too small for this
+     site — labels, meta rows and body copy all sat below comfortable reading
+     size — so every step from xs through 2xl is nudged up one notch and given a
+     roomier line-height. Display sizes (3xl and up) are already set per-heading
+     and are deliberately left alone, so the hierarchy keeps its spread.
+
+     `text-base` is the site's DEFAULT body size: prose, list items, card copy,
+     button labels and link text all use it. `text-sm` is a deliberate step down
+     reserved for genuinely secondary text — chips and service tags, form field
+     labels, helper/validation lines, timestamps and other meta rows — and
+     `text-xs` only for uppercase micro-labels. If a piece of running copy is the
+     thing the reader is meant to read, it gets `text-base`. */
+  --text-xs: 0.8125rem; /* 13px */
+  --text-xs--line-height: 1.5;
+  --text-sm: 0.9375rem; /* 15px */
+  --text-sm--line-height: 1.55;
+  --text-base: 1.0625rem; /* 17px */
+  --text-base--line-height: 1.65;
+  --text-lg: 1.1875rem; /* 19px */
+  --text-lg--line-height: 1.6;
+  --text-xl: 1.3125rem; /* 21px */
+  --text-xl--line-height: 1.5;
+  --text-2xl: 1.5625rem; /* 25px */
+  --text-2xl--line-height: 1.35;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* Browser surfaces we did not draw still belong to the palette. */
+  ::selection {
+    background: color-mix(in srgb, var(--color-secondary) 32%, transparent);
+    color: var(--color-primary-dark);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
+
+  ::-webkit-scrollbar {
+    width: 10px;
+  }
+  ::-webkit-scrollbar-track {
+    background: #f4f2ed;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: color-mix(in srgb, var(--color-primary) 28%, #ffffff);
+    border-radius: 999px;
+    border: 2px solid #f4f2ed;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: color-mix(in srgb, var(--color-primary) 48%, #ffffff);
+  }
+
+  /* Tabular figures wherever numbers are compared: resi, dates, counts. */
+  .font-mono {
+    font-variant-numeric: tabular-nums;
+  }
+
+  summary::-webkit-details-marker {
+    display: none;
+  }
+}
+
+@utility shell {
+  @apply mx-auto w-full max-w-300 px-6;
+}
+
+@layer components {
+  /* Shared max width for every non-hero content block. The hero is allowed to
+     run full-bleed; everything else stays inside this measure. */
+
+  .shell-narrow {
+    width: 100%;
+    max-width: 760px;
+    margin-inline: auto;
+    padding-inline: 1.5rem;
+  }
+
+  .card-lift {
+    transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .card-lift:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 20px 60px rgba(0, 33, 68, 0.12);
+  }
+
+  .glow-gold {
+    filter: drop-shadow(0 0 20px rgba(212, 161, 36, 0.25));
+  }
+
+  /* Photographic ground for a section. The photo is desaturated with a CSS
+     `grayscale` filter rather than a pre-processed b&w asset, and masked out
+     down the block so it is fully present at the top and completely gone by the
+     bottom edge — the section still ends on flat colour, never on a hard image
+     seam. It is lifted with `brightness` because at this opacity the navy
+     heading sits directly on top of it and needs the ground to stay light.
+     The parent must be `relative` — the negative z-index keeps this behind the
+     section's own content while still painting over its background colour. */
+  .section-backdrop {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    background-size: cover;
+    background-position: center;
+    filter: grayscale(1) contrast(0.92) brightness(1);
+    opacity: 0.2;
+    -webkit-mask-image: linear-gradient(
+      to bottom,
+      #000 0%,
+      rgba(0, 0, 0, 0.75) 45%,
+      transparent 100%
+    );
+    mask-image: linear-gradient(
+      to bottom,
+      rgba(0, 0, 0, 0.1) 0%,
+      rgba(0, 0, 0, .6) 20%,
+      transparent 100%
+    );
+  }
+
+  /* Apple-style glass pill, tinted with the brand navy. The look is three
+     stacked layers: a translucent navy fill, a blur+saturate of whatever sits
+     behind it, and an inset top highlight that fakes the lit edge of glass.
+     `backdrop-filter` needs the fill to stay partly transparent, so the text
+     leans on the drop shadow rather than on opaque contrast. */
+  .btn-glass-primary {
+    position: relative;
+    isolation: isolate;
+    background: linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--color-primary-light) 92%, transparent),
+      color-mix(in srgb, var(--color-primary) 95%, transparent)
+    );
+    -webkit-backdrop-filter: blur(14px) saturate(180%);
+    backdrop-filter: blur(14px) saturate(180%);
+    text-shadow: 0 1px 2px rgba(0, 21, 46, 0.4);
+    transition:
+      box-shadow 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+      transform 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+      background 0.3s ease;
+  }
+
+  /* The specular sweep across the top half — kept as a pseudo-element so it can
+     sit above the fill but below the label. */
+  .btn-glass-primary::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    border-radius: inherit;
+    background: linear-gradient(
+      180deg,
+      rgba(255, 255, 255, 0.22) 0%,
+      rgba(255, 255, 255, 0.06) 42%,
+      transparent 60%
+    );
+    pointer-events: none;
+  }
+
+  .btn-glass-primary:hover {
+    background: linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--color-primary-light) 92%, transparent),
+      color-mix(in srgb, var(--color-primary) 95%, transparent)
+    );
+    box-shadow:
+      inset 0 1px 0 0 rgba(255, 255, 255, 0.45),
+      inset 0 -1px 0 0 rgba(0, 0, 0, 0.18),
+      0 10px 26px -8px rgba(0, 21, 46, 0.6);
+    transform: translateY(-1px);
+  }
+
+  .btn-glass-primary:active {
+    transform: translateY(0);
+    box-shadow:
+      inset 0 2px 6px 0 rgba(0, 0, 0, 0.28),
+      0 3px 10px -6px rgba(0, 21, 46, 0.5);
+  }
+
+  /* Shipment tracking is not live yet: these keep their place in the layout but
+     do not respond. See `trackingDisabled` in src/data/site.ts. */
+  .is-disabled {
+    cursor: not-allowed;
+    opacity: 0.45;
+    filter: grayscale(0.65);
+    pointer-events: none;
+    box-shadow: none;
+  }
+
+  /* Sticky card stack (Layanan). Each card carries its own `top` and `z-index`
+     inline — one step lower and one layer higher than the previous card — so the
+     stack works for any number of cards and they deal on top of each other as
+     you scroll instead of scrolling away. The offsets must clear the sticky
+     navbar (~4.75rem), hence the 6rem start in the markup. */
+  .stack-card {
+    position: sticky;
+    min-height: 520px;
+    transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  }
+
+  @media (min-width: 1024px) {
+    .stack-card {
+      height: 70vh;
+    }
+  }
+}
+
+@keyframes marquee {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(var(--marquee-shift, -50%));
+  }
+}
+
+/* Seamless loop invariants — break either one and the seam jumps or goes blank:
+   1. The track holds N identical copies (shrink-0, each with a trailing gap
+      equal to its inner gap) and shifts by exactly one copy: -100%/N, passed
+      in as --marquee-shift by the markup that knows N.
+   2. The remaining N-1 copies must still overflow the viewport, or the tail
+      scrolls into view as empty space just before the reset. */
+.marquee-track {
+  animation: marquee 34s linear infinite;
+  will-change: transform;
+  backface-visibility: hidden;
+}
+.marquee-track:hover {
+  animation-play-state: paused;
+}
+
+@keyframes pulse-ring {
+  0% {
+    transform: scale(0.8);
+    opacity: 0.8;
+  }
+  100% {
+    transform: scale(2.2);
+    opacity: 0;
+  }
+}
+
+.pulse-ring {
+  animation: pulse-ring 2s cubic-bezier(0.215, 0.61, 0.355, 1) infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .marquee-track,
+  .pulse-ring {
+    animation: none;
+  }
+  .card-lift,
+  .btn-glass-primary {
+    transition: none;
+  }
+  .btn-glass-primary:hover,
+  .btn-glass-primary:active {
+    transform: none;
+  }
+  html {
+    scroll-behavior: auto;
+  }
+}
+
+/* Medium-style reading column for blog article bodies. */
+.prose-article {
+  font-family: var(--font-serif);
+  color: #242424;
+  font-size: 20px;
+  line-height: 1.7;
+  letter-spacing: -0.003em;
+}
+
+.prose-article > * + * {
+  margin-top: 1.6em;
+}
+
+.prose-article h2 {
+  font-family: var(--font-sans);
+  font-size: 1.6em;
+  font-weight: 700;
+  line-height: 1.25;
+  letter-spacing: -0.02em;
+  color: var(--color-primary);
+  margin-top: 2em;
+}
+
+.prose-article h3 {
+  font-family: var(--font-sans);
+  font-size: 1.25em;
+  font-weight: 700;
+  line-height: 1.3;
+  color: var(--color-primary);
+  margin-top: 1.8em;
+}
+
+.prose-article a {
+  color: var(--color-primary);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  text-decoration-thickness: 1px;
+}
+
+.prose-article a:hover {
+  color: var(--color-secondary-dark);
+}
+
+.prose-article strong {
+  font-weight: 700;
+  color: #111827;
+}
+
+.prose-article ul,
+.prose-article ol {
+  padding-left: 1.4em;
+}
+
+.prose-article ul {
+  list-style: disc;
+}
+
+.prose-article ol {
+  list-style: decimal;
+}
+
+.prose-article li + li {
+  margin-top: 0.6em;
+}
+
+.prose-article li::marker {
+  color: var(--color-secondary-dark);
+}
+
+.prose-article blockquote {
+  border-left: 3px solid var(--color-secondary);
+  padding-left: 1.2em;
+  font-style: italic;
+  color: #4b5563;
+}
+
+.prose-article hr {
+  border: 0;
+  border-top: 1px solid #e5e7eb;
+  margin-block: 2.5em;
+}
+
+.prose-article img {
+  width: 100%;
+  border-radius: 12px;
+}
+
+.prose-article code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.85em;
+  background: #f3f4f6;
+  padding: 0.15em 0.4em;
+  border-radius: 4px;
+}
+
+@media (max-width: 640px) {
+  .prose-article {
+    font-size: 18px;
+  }
+}

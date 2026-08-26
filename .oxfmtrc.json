@@ -1,0 +1,15 @@
+{
+  "semi": false,
+  "printWidth": 90,
+  "singleQuote": false,
+  "sortImports": {
+    "groups": ["type", "external", ["index", "sibling"], "internal"]
+  },
+  "sortTailwindcss": {
+    "stylesheet": "./src/style/main.css",
+    "attributes": ["class"],
+    "functions": ["clsx", "cn"],
+    "preserveDuplicates": false,
+    "preserveWhitespace": false
+  }
+}

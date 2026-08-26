@@ -12,7 +12,25 @@
     "astro": "astro"
   },
   "dependencies": {
-    "astro": "^7.2.7"
+    "astro": "^7.2.7",
+    "@astrojs/sitemap": "^3.7.3",
+    "@astrojs/vue": "7.0.2",
+    "@lucide/astro": "^1.31.0",
+    "@lucide/vue": "^1.31.0",
+    "@tailwindcss/vite": "^4.3.3",
+    "astro-robots-txt": "^1.0.0",
+    "astro-seo-meta": "^7.0.0",
+    "astro-seo-schema": "^7.0.0",
+    "schema-dts": "^2.0.0",
+    "simple-icons-astro": "^16.1.0",
+    "tailwindcss": "^4.3.3",
+    "vue": "3.5.41"
+  },
+  "devDependencies": {
+    "@astrojs/check": "^0.9.10",
+    "oxfmt": "^0.62.0",
+    "oxlint": "^1.77.0",
+    "typescript": "^6.0.3"
   },
   "allowScripts": {
     "esbuild": true
