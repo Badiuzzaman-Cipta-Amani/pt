@@ -1,46 +1,34 @@
-# Astro Starter Kit: Basics
+# Amani Group
 
-```sh
-pnpm create astro@latest -- --template basics
-```
+Corporate site for Amani Group — a holding company with four subsidiaries. Static
+[Astro 7](https://astro.build) + Tailwind v4, no framework runtime.
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+## Commands
 
-## 🚀 Project Structure
+| Command             | Action                                         |
+| :------------------ | :--------------------------------------------- |
+| `pnpm install`      | Install dependencies                           |
+| `pnpm dev`          | Dev server at `localhost:4321`                 |
+| `pnpm build`        | Build the site to `./dist/`                    |
+| `pnpm preview`      | Preview the production build                   |
+| `pnpm astro check`  | Typecheck                                      |
+| `pnpm exec oxlint`  | Lint                                           |
+| `pnpm exec oxfmt .` | Format (also sorts imports + Tailwind classes) |
 
-Inside of your Astro project, you'll see the following folders and files:
+## Layout
 
 ```text
-/
-├── public/
-│   └── favicon.svg
-├── src
-│   ├── assets
-│   │   └── astro.svg
-│   ├── components
-│   │   └── Welcome.astro
-│   ├── layouts
-│   │   └── Layout.astro
-│   └── pages
-│       └── index.astro
-└── package.json
+src/
+├── content/articles/   one .md per article (the file name is the slug)
+├── data/site.ts        every piece of copy on the site
+├── data/units.ts       the four business units
+├── assets/units/       unit logos (served through astro:assets)
+├── components/         nav, footer, section blocks
+├── layouts/Layout.astro
+├── pages/              /  /about  /unit-usaha[/slug]  /artikel[/slug]  /contact
+├── scripts/site.ts     navbar, reveals, counters, rail
+└── style/main.css      the Tailwind v4 design system
 ```
 
-To learn more about the folder structure of an Astro project, refer to [our guide on project structure](https://docs.astro.build/en/basics/project-structure/).
-
-## 🧞 Commands
-
-All commands are run from the root of the project, from a terminal:
-
-| Command                | Action                                           |
-| :--------------------- | :----------------------------------------------- |
-| `pnpm install`         | Installs dependencies                            |
-| `pnpm dev`             | Starts local dev server at `localhost:4321`      |
-| `pnpm build`           | Build your production site to `./dist/`          |
-| `pnpm preview`         | Preview your build locally, before deploying     |
-| `pnpm astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `pnpm astro -- --help` | Get help using the Astro CLI                     |
-
-## 👀 Want to learn more?
-
-Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+See `CLAUDE.md` for the full map, invariants and what is still outstanding. Set `site`
+in `astro.config.mjs` before deploying.
