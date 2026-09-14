@@ -1,0 +1,77 @@
+---
+import SocialIcon from "@/components/SocialIcon.astro"
+import { brand, contact, footerColumns, legalLinks, socials } from "@/data/site"
+
+const year = new Date().getFullYear()
+---
+
+<footer id="contact" class="bg-ink text-white">
+  <div class="site pt-28 pb-12">
+    <div class="grid gap-16 md:grid-cols-12">
+      <div class="md:col-span-4">
+        <a href="/" class="flex items-center gap-2.5">
+          <span
+            class="grid h-8 w-8 place-items-center rounded-[0.1875rem] border border-white/70 text-sm font-semibold"
+          >
+            {brand.mark}
+          </span>
+          <span class="text-lg">{brand.name}</span>
+        </a>
+        <p class="mt-6 max-w-xs text-[0.9375rem] leading-relaxed font-light text-white/60">
+          {contact.address.join(", ")}<br />
+          {contact.email}<br />
+          {contact.phone}
+        </p>
+        <div class="mt-6 flex gap-2">
+          {
+            socials.map(({ label, href, icon }) => (
+              <a
+                href={href}
+                target="_blank"
+                rel="noopener"
+                aria-label={label}
+                class="grid h-10 w-10 place-items-center rounded-full border border-white/20 text-white/70 transition-colors hover:border-white hover:text-white"
+              >
+                <SocialIcon name={icon} class="h-[1.125rem] w-[1.125rem]" />
+              </a>
+            ))
+          }
+        </div>
+      </div>
+
+      <div class="grid grid-cols-2 gap-10 sm:grid-cols-3 md:col-span-8">
+        {
+          footerColumns.map(({ title, links }) => (
+            <div>
+              <p class="text-base">{title}</p>
+              <ul class="mt-4 space-y-3 text-[0.9375rem] font-light text-white/60">
+                {links.map(({ label, href }) => (
+                  <li>
+                    <a href={href} class="transition-colors hover:text-white">
+                      {label}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+
+    <div
+      class="mt-20 flex flex-col gap-3 border-t border-white/10 pt-8 text-sm font-light text-white/45 sm:flex-row sm:items-center sm:justify-between"
+    >
+      <p>© {year} {brand.name}. Seluruh hak cipta dilindungi.</p>
+      <div class="flex gap-5">
+        {
+          legalLinks.map(({ label, href }) => (
+            <a href={href} class="transition-colors hover:text-white">
+              {label}
+            </a>
+          ))
+        }
+      </div>
+    </div>
+  </div>
+</footer>
