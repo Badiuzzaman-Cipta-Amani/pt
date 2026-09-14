@@ -68,10 +68,12 @@ CLAUDE.md / AGENTS.md             rewritten (byte-identical)
 ### Task 1: Dependencies and config
 
 **Files:**
+
 - Modify: `package.json`, `pnpm-workspace.yaml`, `astro.config.mjs`
 - Move: `public/units/` → `src/assets/units/`
 
 **Interfaces:**
+
 - Produces: `@fontsource-variable/outfit` importable; `src/assets/units/<slug>.png` importable as `ImageMetadata`.
 
 - [ ] **Step 1: Remove unused deps, add the font**
@@ -122,6 +124,7 @@ export default defineConfig({
 ```
 git mv public/units src/assets/units
 ```
+
 (`public/units` is untracked, so if `git mv` refuses: `mkdir -p src/assets && mv public/units src/assets/units`.)
 
 - [ ] **Step 5: Verify** — `pnpm install` succeeds; `ls node_modules/@fontsource-variable/outfit/index.css` exists; `ls src/assets/units | wc -l` is 24.
@@ -133,9 +136,11 @@ git mv public/units src/assets/units
 ### Task 2: Design system (`main.css`)
 
 **Files:**
+
 - Rewrite: `src/style/main.css`
 
 **Interfaces:**
+
 - Produces: colour tokens `ink body muted line mist sand lime flame white black`; component classes `site t-overline t-h1 t-eyebrow t-label t-body t-card t-h2 t-h2-bold t-h3 t-stat btn btn-light btn-ghost btn-ghost-ink btn-outline btn-ink btn-flame nav-link navbar rail rail-wrap edge-left logo-tile timeline tl-item tl-card tl-img field article-body grain anim d-title-1..3 d-divider d-label d-desc d-btn-1..2 d-1..4 hero-img veil`; reveal states `[data-reveal]` / `.is-visible`.
 
 - [ ] **Step 1: Write the file**
@@ -734,9 +739,11 @@ git mv public/units src/assets/units
 ### Task 3: Data — `site.ts`, `units.ts`, articles collection, `lib/articles.ts`
 
 **Files:**
+
 - Create: `src/data/site.ts`, `src/data/units.ts`, `src/content.config.ts`, `src/content/articles/{rotasi-manajer-satu-tahun,cabang-ketujuh-tanpa-utang,satu-format-laporan-empat-unit,pemasok-lokal-rantai-grup}.md`, `src/lib/articles.ts`
 
 **Interfaces:**
+
 - Produces (site.ts): `brand`, `navLinks`, `contact`, `socials`, `footerColumns`, `stats`, `hero`, `visi`, `misi`, `unitUsahaIntro`, `testimonials`, `csr`, `artikelIntro`, `investorCta`, `kemitraanCta`, `timeline`, `team`, `contactTopics`, `pageHeaders`, `contactPage`; types `SocialIconName`, `Cta`.
 - Produces (units.ts): `Unit` type, `units: Unit[]`, `getUnit(slug)`.
 - Produces (lib/articles.ts): `Article` type, `getArticles()`, `formatDate(d)`, `imageAt(url, w)`.
@@ -782,7 +789,11 @@ export const contact = {
 
 export const socials: { label: string; href: string; icon: SocialIconName }[] = [
   { label: "Instagram", href: "https://instagram.com/amanigroup", icon: "instagram" },
-  { label: "LinkedIn", href: "https://linkedin.com/company/amanigroup", icon: "linkedin" },
+  {
+    label: "LinkedIn",
+    href: "https://linkedin.com/company/amanigroup",
+    icon: "linkedin",
+  },
   { label: "YouTube", href: "https://youtube.com/@amanigroup", icon: "youtube" },
   { label: "WhatsApp", href: "https://wa.me/62215550123", icon: "whatsapp" },
 ]
@@ -1185,7 +1196,11 @@ export const units: Unit[] = [
     ],
     website: "https://laundry.amanigroup.co.id",
     socials: [
-      { label: "Instagram", href: "https://instagram.com/amanilaundry", icon: "instagram" },
+      {
+        label: "Instagram",
+        href: "https://instagram.com/amanilaundry",
+        icon: "instagram",
+      },
       { label: "WhatsApp", href: "https://wa.me/62215550123", icon: "whatsapp" },
     ],
   },
@@ -1207,7 +1222,11 @@ export const units: Unit[] = [
     ],
     website: "https://karpet.amanigroup.co.id",
     socials: [
-      { label: "Instagram", href: "https://instagram.com/amanikarpet", icon: "instagram" },
+      {
+        label: "Instagram",
+        href: "https://instagram.com/amanikarpet",
+        icon: "instagram",
+      },
       { label: "WhatsApp", href: "https://wa.me/62215550123", icon: "whatsapp" },
     ],
   },
@@ -1229,7 +1248,11 @@ export const units: Unit[] = [
     ],
     website: "https://warkop.amanigroup.co.id",
     socials: [
-      { label: "Instagram", href: "https://instagram.com/warkopamani", icon: "instagram" },
+      {
+        label: "Instagram",
+        href: "https://instagram.com/warkopamani",
+        icon: "instagram",
+      },
       { label: "WhatsApp", href: "https://wa.me/62215550123", icon: "whatsapp" },
     ],
   },
@@ -1251,7 +1274,11 @@ export const units: Unit[] = [
     ],
     website: "https://pat.amanigroup.co.id",
     socials: [
-      { label: "LinkedIn", href: "https://linkedin.com/company/amanigroup", icon: "linkedin" },
+      {
+        label: "LinkedIn",
+        href: "https://linkedin.com/company/amanigroup",
+        icon: "linkedin",
+      },
       { label: "WhatsApp", href: "https://wa.me/62215550123", icon: "whatsapp" },
     ],
   },
@@ -1276,7 +1303,7 @@ const articles = defineCollection({
     date: z.coerce.date(),
     category: z.string(),
     excerpt: z.string(),
-    image: z.string().url(),
+    image: z.url(),
   }),
 })
 
@@ -1286,6 +1313,7 @@ export const collections = { articles }
 - [ ] **Step 4: The four articles** (`src/content/articles/<slug>.md`)
 
 `rotasi-manajer-satu-tahun.md`:
+
 ```md
 ---
 title: "Rotasi manajer: hasil evaluasi setelah satu tahun"
@@ -1305,6 +1333,7 @@ Berdasarkan hasil ini, manajemen menetapkan rotasi sebagai program tetap dengan 
 ```
 
 `cabang-ketujuh-tanpa-utang.md`:
+
 ```md
 ---
 title: Membuka cabang ketujuh tanpa pendanaan utang
@@ -1324,6 +1353,7 @@ Pendekatan ini memperlambat laju ekspansi dibandingkan pendanaan utang, namun me
 ```
 
 `satu-format-laporan-empat-unit.md`:
+
 ```md
 ---
 title: Satu format laporan untuk empat unit yang berbeda
@@ -1343,6 +1373,7 @@ Sejak format tunggal diberlakukan, waktu konsolidasi laporan grup berkurang dari
 ```
 
 `pemasok-lokal-rantai-grup.md`:
+
 ```md
 ---
 title: Pemasok lokal sebagai bagian dari rantai pasok grup
@@ -1397,9 +1428,11 @@ export const imageAt = (url: string, width: number) => url.replace(/w=\d+/, `w=$
 ### Task 4: Site script
 
 **Files:**
+
 - Create: `src/scripts/site.ts`
 
 **Interfaces:**
+
 - Consumes DOM: `#navbar` (`[data-solid]`), `#menu-btn`, `#mobile-menu`, `[data-count][data-suffix]`, `[data-reveal][data-reveal-delay]`, `.rail`, `.rail-prev`, `.rail-next`.
 
 - [ ] **Step 1: Write it**
@@ -1420,7 +1453,10 @@ if (navbar) {
   const alwaysSolid = navbar.hasAttribute("data-solid")
   const menuOpen = () => mobileMenu !== null && !mobileMenu.hidden
   const update = () =>
-    navbar.classList.toggle("is-scrolled", alwaysSolid || menuOpen() || window.scrollY > 24)
+    navbar.classList.toggle(
+      "is-scrolled",
+      alwaysSolid || menuOpen() || window.scrollY > 24,
+    )
   update()
   window.addEventListener("scroll", update, { passive: true })
 
@@ -1522,9 +1558,11 @@ if (rail) {
 ### Task 5: Layout, nav, footer, social icons, and a smoke page
 
 **Files:**
+
 - Create: `src/components/SocialIcon.astro`, `src/components/SiteNav.astro`, `src/components/SiteFooter.astro`, `src/layouts/Layout.astro`, `src/pages/index.astro` (placeholder, replaced in Task 7)
 
 **Interfaces:**
+
 - Produces: `Layout` props `{ title: string; description: string; solidNav?: boolean; ogImage?: string }` and a `head` slot. `SocialIcon` props `{ name: SocialIconName; class?: string }`. `SiteNav` props `{ solid?: boolean }`.
 
 - [ ] **Step 1: `src/components/SocialIcon.astro`**
@@ -1813,9 +1851,11 @@ import { seo } from "@/data/site"
 ### Task 6: Shared section components
 
 **Files:**
+
 - Create: `src/components/PageHeader.astro`, `src/components/SectionHeading.astro`, `src/components/Stats.astro`, `src/components/MisiGrid.astro`, `src/components/CtaBand.astro`, `src/components/UnitCard.astro`, `src/components/ArticleCard.astro`
 
 **Interfaces:**
+
 - `PageHeader` props `{ eyebrow: string; title: string; lead?: string; image?: { src: string; alt: string } }`, slots `default` (below the lead, inside the container).
 - `SectionHeading` props `{ title: string; text: string; bold?: boolean }` (default `bold = true`).
 - `Stats` props `{ items?: typeof stats }` (defaults to `stats` from site.ts).
@@ -2081,6 +2121,7 @@ const { title, excerpt, category, date, image } = article.data
 ### Task 7: Home page
 
 **Files:**
+
 - Rewrite: `src/pages/index.astro`
 
 - [ ] **Step 1: Write it**
@@ -2369,6 +2410,7 @@ Note: the article cards inside the rail each carry `data-reveal`; the rail wrapp
 ### Task 8: About page
 
 **Files:**
+
 - Create: `src/pages/about.astro`
 
 - [ ] **Step 1: Write it**
@@ -2521,6 +2563,7 @@ const pad = (n: number) => String(n).padStart(2, "0")
 ### Task 9: Unit Usaha listing and detail
 
 **Files:**
+
 - Create: `src/pages/unit-usaha/index.astro`, `src/pages/unit-usaha/[slug].astro`
 
 - [ ] **Step 1: `unit-usaha/index.astro`**
@@ -2660,6 +2703,7 @@ const { unit } = Astro.props
 ### Task 10: Artikel listing and detail
 
 **Files:**
+
 - Create: `src/pages/artikel/index.astro`, `src/pages/artikel/[slug].astro`
 
 - [ ] **Step 1: `artikel/index.astro`**
@@ -2818,6 +2862,7 @@ const { Content } = await render(article)
 ### Task 11: Contact page
 
 **Files:**
+
 - Create: `src/pages/contact.astro`
 
 - [ ] **Step 1: Write it**
@@ -3042,6 +3087,7 @@ const channels = [
 ### Task 13: Documentation
 
 **Files:**
+
 - Rewrite: `CLAUDE.md`, `AGENTS.md` (byte-identical copy), `README.md` (short project blurb + command table)
 - Delete: nothing (old spec/plan stay under `docs/`)
 

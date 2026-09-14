@@ -29,15 +29,15 @@ project. `investor.html` is deliberately **not** ported.
 
 ## Routes
 
-| Route                | File                            | Notes                                                                                                                                     |
-| -------------------- | ------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------- |
-| `/`                  | `pages/index.astro`             | hero, visi + stats, misi, unit usaha, testimoni, CSR, artikel rail, investor CTA                                                           |
-| `/about`             | `pages/about.astro`             | header, `#visi` (statement + pillars + stats), `#misi`, `#sejarah` timeline, `#tim`, investor CTA                                         |
-| `/unit-usaha`        | `pages/unit-usaha/index.astro`  | header, 4-up grid of `UnitCard`, kemitraan CTA                                                                                            |
-| `/unit-usaha/[slug]` | `pages/unit-usaha/[slug].astro` | `getStaticPaths` from `units.ts`; logo, sector, name, description, facts, website, socials; back link; kemitraan CTA                       |
-| `/artikel`           | `pages/artikel/index.astro`     | featured latest (side-bleed image on lg), grid of the rest                                                                                |
-| `/artikel/[slug]`    | `pages/artikel/[slug].astro`    | dark header, hero image, author/category aside, body, 3 related; Article JSON-LD                                                          |
-| `/contact`           | `pages/contact.astro`           | form + channels; `SiteNav solid`; `?topic=` preselect                                                                                     |
+| Route                | File                            | Notes                                                                                                                |
+| -------------------- | ------------------------------- | -------------------------------------------------------------------------------------------------------------------- |
+| `/`                  | `pages/index.astro`             | hero, visi + stats, misi, unit usaha, testimoni, CSR, artikel rail, investor CTA                                     |
+| `/about`             | `pages/about.astro`             | header, `#visi` (statement + pillars + stats), `#misi`, `#sejarah` timeline, `#tim`, investor CTA                    |
+| `/unit-usaha`        | `pages/unit-usaha/index.astro`  | header, 4-up grid of `UnitCard`, kemitraan CTA                                                                       |
+| `/unit-usaha/[slug]` | `pages/unit-usaha/[slug].astro` | `getStaticPaths` from `units.ts`; logo, sector, name, description, facts, website, socials; back link; kemitraan CTA |
+| `/artikel`           | `pages/artikel/index.astro`     | featured latest (side-bleed image on lg), grid of the rest                                                           |
+| `/artikel/[slug]`    | `pages/artikel/[slug].astro`    | dark header, hero image, author/category aside, body, 3 related; Article JSON-LD                                     |
+| `/contact`           | `pages/contact.astro`           | form + channels; `SiteNav solid`; `?topic=` preselect                                                                |
 
 Link rewrites from the mockups: `x.html` → `/x`; `unit-usaha.html#slug` →
 `/unit-usaha/slug`; `artikel.html#slug` → `/artikel/slug`; `investor.html` →
@@ -122,9 +122,10 @@ preselect, validation, `mailto:` builder routing `investor` to
 ## Verification
 
 `pnpm astro check`, `pnpm build`, `pnpm exec oxlint`, `pnpm exec oxfmt .`; dev server
-+ browser screenshots of every route at ~390 / 1024 / 1440 px checking navbar state,
-mobile menu, reveals, counters, rail arrows, unit + article detail, contact preselect.
-Then `CLAUDE.md`/`AGENTS.md` rewritten for this site (byte-identical copies).
+
+- browser screenshots of every route at ~390 / 1024 / 1440 px checking navbar state,
+  mobile menu, reveals, counters, rail arrows, unit + article detail, contact preselect.
+  Then `CLAUDE.md`/`AGENTS.md` rewritten for this site (byte-identical copies).
 
 ## Defaults taken
 
