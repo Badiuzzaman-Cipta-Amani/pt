@@ -1,0 +1,196 @@
+---
+import { ArrowRight, ArrowUpRight, Mail } from "@lucide/astro"
+import SocialIcon from "@/components/SocialIcon.astro"
+import { contact, contactPage, contactTopics, seo } from "@/data/site"
+import Layout from "@/layouts/Layout.astro"
+
+// No dark header: the page opens straight on the form, so the navbar is solid.
+const channels = [
+  { label: "WhatsApp", value: contact.phone, href: contact.whatsapp + "?text=" + encodeURIComponent("Halo Amani Group, saya ingin bertanya mengenai "), icon: "whatsapp" as const },
+  { label: "Instagram", value: contact.instagramHandle, href: contact.instagram, icon: "instagram" as const },
+  { label: "Email", value: contact.email, href: `mailto:${contact.email}`, icon: null },
+]
+---
+
+<Layout title={seo.contact.title} description={seo.contact.description} solidNav>
+  <section class="bg-white">
+    <div class="site pt-40 pb-32 lg:pt-48">
+      <div class="grid grid-cols-1 gap-20 xl:grid-cols-12 xl:gap-x-8">
+        <!-- Form -->
+        <div class="xl:col-span-7" data-reveal>
+          <h1 class="t-h2-bold">{contactPage.title}</h1>
+          <p class="t-body mt-4 max-w-xl">{contactPage.intro}</p>
+
+          <form
+            id="contact-form"
+            class="mt-10 grid grid-cols-1 gap-6 sm:grid-cols-2"
+            novalidate
+            data-email={contact.email}
+            data-investor-email={contact.investorEmail}
+          >
+            <div>
+              <label for="f-name" class="t-label block">
+                Nama lengkap <span class="text-flame">*</span>
+              </label>
+              <input
+                id="f-name"
+                name="name"
+                type="text"
+                required
+                autocomplete="name"
+                class="field mt-2"
+                placeholder="Nama Anda"
+              />
+            </div>
+            <div>
+              <label for="f-email" class="t-label block">
+                Email <span class="text-flame">*</span>
+              </label>
+              <input
+                id="f-email"
+                name="email"
+                type="email"
+                required
+                autocomplete="email"
+                class="field mt-2"
+                placeholder="nama@perusahaan.com"
+              />
+            </div>
+            <div>
+              <label for="f-company" class="t-label block">Perusahaan / Institusi</label>
+              <input
+                id="f-company"
+                name="company"
+                type="text"
+                autocomplete="organization"
+                class="field mt-2"
+                placeholder="Opsional"
+              />
+            </div>
+            <div>
+              <label for="f-topic" class="t-label block">
+                Topik <span class="text-flame">*</span>
+              </label>
+              <select id="f-topic" name="topic" required class="field mt-2">
+                {contactTopics.map(({ value, label }) => <option value={value}>{label}</option>)}
+              </select>
+            </div>
+            <div class="sm:col-span-2">
+              <label for="f-message" class="t-label block">
+                Pesan <span class="text-flame">*</span>
+              </label>
+              <textarea
+                id="f-message"
+                name="message"
+                rows="6"
+                required
+                class="field mt-2"
+                placeholder="Jelaskan kebutuhan Anda secara singkat dan jelas."></textarea>
+            </div>
+            <div class="sm:col-span-2">
+              <p id="form-error" class="mb-4 text-[0.9375rem] text-flame" hidden>
+                {contactPage.error}
+              </p>
+              <button type="submit" class="btn btn-ink px-8 py-4 text-base">
+                Kirim Pesan
+                <ArrowRight class="h-4 w-4" stroke-width={1.5} />
+              </button>
+              <p class="t-body mt-4 text-sm">{contactPage.privacy}</p>
+            </div>
+          </form>
+        </div>
+
+        <!-- Channels -->
+        <aside class="xl:col-span-5" data-reveal data-reveal-delay="100">
+          <div class="bg-mist p-8 sm:p-10">
+            <h2 class="t-h3">{contactPage.channelsTitle}</h2>
+            <p class="t-body mt-3">{contactPage.channelsIntro}</p>
+            <div class="mt-8 grid gap-3">
+              {
+                channels.map(({ label, value, href, icon }) => (
+                  <a
+                    href={href}
+                    target={href.startsWith("mailto:") ? undefined : "_blank"}
+                    rel={href.startsWith("mailto:") ? undefined : "noopener"}
+                    class="group flex items-center gap-4 bg-white p-5 transition-colors hover:bg-ink hover:text-white"
+                  >
+                    <span class="grid h-11 w-11 shrink-0 place-items-center rounded-full border border-line transition-colors group-hover:border-white/30">
+                      {icon ? (
+                        <SocialIcon name={icon} class="h-5 w-5" />
+                      ) : (
+                        <Mail class="h-5 w-5" stroke-width={1.6} />
+                      )}
+                    </span>
+                    <span class="min-w-0">
+                      <span class="block text-base">{label}</span>
+                      <span class="block text-[0.9375rem] font-light break-words opacity-70">
+                        {value}
+                      </span>
+                    </span>
+                    <ArrowUpRight class="ml-auto h-4 w-4 shrink-0 opacity-50" stroke-width={1.5} />
+                  </a>
+                ))
+              }
+            </div>
+
+            <dl class="mt-10 grid gap-6 border-t border-line pt-8 sm:grid-cols-2">
+              <div>
+                <dt class="t-label">Kantor pusat</dt>
+                <dd class="t-body mt-2">{contact.address[0]}<br />{contact.address[1]}</dd>
+              </div>
+              <div>
+                <dt class="t-label">Jam kerja</dt>
+                <dd class="t-body mt-2">{contact.hours[0]}<br />{contact.hours[1]}</dd>
+              </div>
+              <div>
+                <dt class="t-label">Telepon</dt>
+                <dd class="t-body mt-2">{contact.phone}</dd>
+              </div>
+              <div>
+                <dt class="t-label">Relasi investor</dt>
+                <dd class="t-body mt-2">{contact.investorEmail}</dd>
+              </div>
+            </dl>
+          </div>
+        </aside>
+      </div>
+    </div>
+  </section>
+</Layout>
+
+<script>
+  // The form builds a mailto: link — there is no backend. `?topic=` (used by CTA
+  // links across the site) preselects the topic; investor enquiries go to the
+  // investor relations mailbox.
+  const form = document.getElementById("contact-form") as HTMLFormElement
+  const topic = document.getElementById("f-topic") as HTMLSelectElement
+  const error = document.getElementById("form-error") as HTMLElement
+
+  const preset = new URLSearchParams(location.search).get("topic")
+  if (preset && [...topic.options].some((o) => o.value === preset)) topic.value = preset
+
+  const recipientFor = (t: string) =>
+    t === "investor" ? form.dataset.investorEmail : form.dataset.email
+
+  form.addEventListener("submit", (e) => {
+    e.preventDefault()
+    const valid = form.checkValidity()
+    error.hidden = valid
+    if (!valid) {
+      form.querySelector<HTMLElement>(":invalid")?.focus()
+      return
+    }
+    const data = Object.fromEntries(new FormData(form).entries()) as Record<string, string>
+    const topicLabel = topic.options[topic.selectedIndex]?.text ?? ""
+    const subject = `[${topicLabel}] Permintaan dari ${data.name}`
+    const body = [
+      `Nama: ${data.name}`,
+      `Email: ${data.email}`,
+      `Perusahaan/Institusi: ${data.company || "-"}`,
+      `Topik: ${topicLabel}`,
+      "",
+      data.message,
+    ].join("\n")
+    location.href = `mailto:${recipientFor(data.topic)}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`
+  })
+</script>

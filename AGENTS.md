@@ -241,7 +241,7 @@ That file is the single source of truth for:
     against the mark's 18% height clears the panel's 38% top edge — those are a pair —
     and the lift is deliberately **not** dropped under `prefers-reduced-motion`, because
     it is what makes the room the panel opens into.
-  - **`.misi-panel`** carries no solid background of its own — the gradient *is* the
+  - **`.misi-panel`** carries no solid background of its own — the gradient _is_ the
     background, running from transparent to the footer's ink over the panel's own top
     padding. That padding is therefore load-bearing: shrink it and the photograph above
     ends in a hard edge instead of fading into the panel. The panel is also a flex item

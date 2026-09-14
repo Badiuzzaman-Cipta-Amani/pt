@@ -1,0 +1,81 @@
+---
+import { ChevronLeft } from "@lucide/astro"
+import { Schema } from "astro-seo-schema"
+import { render } from "astro:content"
+import ArticleCard from "@/components/ArticleCard.astro"
+import { artikelIntro, brand } from "@/data/site"
+import Layout from "@/layouts/Layout.astro"
+import { formatDate, getArticles } from "@/lib/articles"
+
+export async function getStaticPaths() {
+  const articles = await getArticles()
+  return articles.map((article) => ({
+    params: { slug: article.id },
+    props: { article, related: articles.filter((a) => a.id !== article.id).slice(0, 3) },
+  }))
+}
+
+const { article, related } = Astro.props
+const { title, excerpt, category, date, image } = article.data
+const { Content } = await render(article)
+---
+
+<Layout title={`${title} — ${brand.name}`} description={excerpt} ogImage={image}>
+  <Schema
+    slot="head"
+    item={{
+      "@context": "https://schema.org",
+      "@type": "Article",
+      headline: title,
+      description: excerpt,
+      image,
+      datePublished: date.toISOString(),
+      author: { "@type": "Organization", name: artikelIntro.author },
+      publisher: { "@type": "Organization", name: brand.name },
+    }}
+  />
+
+  <section class="bg-ink text-white">
+    <div class="site pt-40 pb-20 lg:pt-52 lg:pb-28">
+      <a
+        href="/artikel"
+        class="anim d-1 inline-flex items-center gap-2 text-[0.9375rem] font-light text-white/60 transition-colors hover:text-white"
+      >
+        <ChevronLeft class="h-4 w-4" stroke-width={1.5} />
+        Seluruh artikel
+      </a>
+      <p class="anim d-2 t-overline mt-10">{category} · {formatDate(date)}</p>
+      <h1 class="anim d-3 t-h1 mt-5 max-w-4xl">{title}</h1>
+    </div>
+  </section>
+
+  <section class="bg-white">
+    <div class="site pb-32">
+      <div class="aspect-2/1 overflow-hidden bg-mist lg:aspect-16/7">
+        <img src={image} alt={title} class="h-full w-full object-cover" />
+      </div>
+      <div class="grid gap-16 pt-20 lg:grid-cols-12 lg:gap-x-8">
+        <aside class="lg:col-span-3">
+          <p class="t-label">Penulis</p>
+          <p class="mt-2 text-base text-body">{artikelIntro.author}</p>
+          <p class="t-label mt-8">Kategori</p>
+          <p class="mt-2 text-base text-body">{category}</p>
+        </aside>
+        <div class="article-body lg:col-span-7">
+          <Content />
+        </div>
+      </div>
+
+      <div class="mt-20 border-t border-line pt-14">
+        <h2 class="t-h3">Artikel lainnya</h2>
+        <div class="mt-8 grid gap-x-8 gap-y-16 sm:grid-cols-2 lg:grid-cols-3">
+          {
+            related.map((a, i) => (
+              <ArticleCard article={a} delay={i * 100} withCategory />
+            ))
+          }
+        </div>
+      </div>
+    </div>
+  </section>
+</Layout>

@@ -1,0 +1,136 @@
+---
+import CtaBand from "@/components/CtaBand.astro"
+import MisiGrid from "@/components/MisiGrid.astro"
+import PageHeader from "@/components/PageHeader.astro"
+import SectionHeading from "@/components/SectionHeading.astro"
+import Stats from "@/components/Stats.astro"
+import { investorCta, pageHeaders, seo, team, timeline, visi } from "@/data/site"
+import Layout from "@/layouts/Layout.astro"
+
+const pad = (n: number) => String(n).padStart(2, "0")
+---
+
+<Layout title={seo.about.title} description={seo.about.description}>
+  <PageHeader {...pageHeaders.about} />
+
+  <!-- ================= VISI KAMI ================= -->
+  <section id="visi" class="scroll-mt-20 bg-white">
+    <!-- Sand statement band: the vision as one large pull-statement, the isometric
+         line art kept as a faint watermark behind it -->
+    <div class="relative isolate overflow-hidden bg-sand">
+      <svg
+        class="pointer-events-none absolute inset-y-0 right-0 -z-10 h-full w-full lg:w-[60%]"
+        viewBox="0 0 900 520"
+        preserveAspectRatio="xMidYMid slice"
+        fill="none"
+        stroke="#FFFFFF"
+        stroke-opacity="0.7"
+        stroke-width="1"
+        aria-hidden="true"
+      >
+        <polyline points="700,0 230,270 230,520"></polyline>
+        <polyline points="230,270 470,410 900,150"></polyline>
+        <polyline points="230,430 700,160 900,275"></polyline>
+        <line x1="700" y1="160" x2="700" y2="520"></line>
+        <line x1="700" y1="380" x2="900" y2="500"></line>
+        <line x1="470" y1="410" x2="470" y2="520"></line>
+      </svg>
+      <div class="site py-32">
+        <div class="grid gap-12 lg:grid-cols-12 lg:gap-20">
+          <div class="lg:col-span-4" data-reveal>
+            <p class="t-eyebrow">{visi.eyebrow}</p>
+            <div class="mt-6 h-px w-16 bg-body/30"></div>
+            <p class="t-body mt-8 max-w-sm">{visi.intro}</p>
+          </div>
+          <div class="lg:col-span-8" data-reveal data-reveal-delay="100">
+            <h2
+              class="text-[clamp(1.75rem,1.1rem+2.4vw,3.25rem)] leading-[1.18] font-light tracking-[-0.015em] text-body"
+            >
+              {
+                visi.segments.map(({ text, strong }) =>
+                  strong ? <span class="font-medium">{text}</span> : text,
+                )
+              }
+            </h2>
+          </div>
+        </div>
+
+        <!-- Three pillars drawn from the statement -->
+        <div class="mt-20 grid gap-10 border-t border-body/15 pt-12 sm:grid-cols-3 lg:gap-16">
+          {
+            visi.pillars.map(({ title, body }, i) => (
+              <div data-reveal data-reveal-delay={i * 100}>
+                <p class="t-label">{pad(i + 1)}</p>
+                <h3 class="t-card mt-4">{title}</h3>
+                <p class="t-body mt-3 text-[0.9375rem]">{body}</p>
+              </div>
+            ))
+          }
+        </div>
+      </div>
+    </div>
+
+    <Stats />
+  </section>
+
+  <MisiGrid />
+
+  <!-- ================= SEJARAH ================= -->
+  <section id="sejarah" class="scroll-mt-20 bg-white">
+    <div class="site py-32">
+      <SectionHeading title={timeline.title} text={timeline.intro} />
+
+      <!-- Vertical timeline: a centre spine on md+, entries alternate left/right.
+           On phones the spine sits on the left and every entry hangs to its right. -->
+      <ol class="timeline relative mt-20">
+        {
+          timeline.items.map(({ year, title, body, image, alt }) => (
+            <li class="tl-item" data-reveal>
+              <div class="tl-card">
+                <p class="t-stat text-[2rem]">{year}</p>
+                <div class="tl-img mt-5 aspect-16/10 overflow-hidden bg-mist">
+                  <img src={image} alt={alt} class="h-full w-full object-cover" loading="lazy" />
+                </div>
+                <h3 class="t-card mt-6">{title}</h3>
+                <p class="t-body mt-3">{body}</p>
+              </div>
+            </li>
+          ))
+        }
+      </ol>
+    </div>
+  </section>
+
+  <!-- ================= TIM ================= -->
+  <section id="tim" class="scroll-mt-20 bg-mist">
+    <div class="site py-32">
+      <SectionHeading title={team.title} text={team.intro} />
+      <div class="mt-20 grid gap-x-6 gap-y-16 sm:grid-cols-2 lg:grid-cols-4">
+        {
+          team.members.map(({ name, role, bio, image }, i) => (
+            <article data-reveal data-reveal-delay={i * 100}>
+              <div class="aspect-4/5 overflow-hidden bg-white">
+                <img
+                  src={image}
+                  alt={name}
+                  class="h-full w-full object-cover grayscale"
+                  loading="lazy"
+                />
+              </div>
+              <h3 class="t-card mt-6">{name}</h3>
+              <p class="t-body mt-1">{role}</p>
+              <p class="t-body mt-3 text-[0.9375rem]">{bio}</p>
+            </article>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <CtaBand
+    eyebrow={investorCta.eyebrow}
+    heading={investorCta.heading}
+    cta={investorCta.cta}
+    note={investorCta.note}
+  />
+</Layout>

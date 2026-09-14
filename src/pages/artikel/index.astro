@@ -1,0 +1,56 @@
+---
+import ArticleCard from "@/components/ArticleCard.astro"
+import PageHeader from "@/components/PageHeader.astro"
+import { artikelIntro, seo } from "@/data/site"
+import Layout from "@/layouts/Layout.astro"
+import { formatDate, getArticles, imageAt } from "@/lib/articles"
+
+// The latest article is featured in the header; the grid lists the rest.
+const [featured, ...rest] = await getArticles()
+---
+
+<Layout title={seo.artikel.title} description={seo.artikel.description}>
+  {
+    featured && (
+      <PageHeader
+        eyebrow="Artikel · Terbaru"
+        title={featured.data.title}
+        lead={featured.data.excerpt}
+        image={{ src: featured.data.image, alt: featured.data.title }}
+      >
+        <div class="anim d-4 mt-10 flex flex-wrap items-center gap-6">
+          <a href={`/artikel/${featured.id}`} class="btn btn-light px-7 py-3">
+            Baca artikel
+          </a>
+          <p class="text-sm font-light text-white/60">
+            {featured.data.category} · {formatDate(featured.data.date)}
+          </p>
+        </div>
+        <!-- image for screens without the side bleed -->
+        <div class="anim d-4 mt-14 aspect-video overflow-hidden bg-white/5 lg:hidden">
+          <img
+            src={imageAt(featured.data.image, 1000)}
+            alt={featured.data.title}
+            class="h-full w-full object-cover"
+          />
+        </div>
+      </PageHeader>
+    )
+  }
+
+  <section class="bg-white">
+    <div class="site py-32">
+      <div class="flex flex-wrap items-end justify-between gap-6" data-reveal>
+        <h2 class="t-h2-bold">{artikelIntro.listTitle}</h2>
+        <p class="t-body max-w-md">{artikelIntro.listIntro}</p>
+      </div>
+      <div class="mt-20 grid gap-x-8 gap-y-20 sm:grid-cols-2 lg:grid-cols-3">
+        {
+          rest.map((article, i) => (
+            <ArticleCard article={article} delay={(i % 3) * 100} withCategory />
+          ))
+        }
+      </div>
+    </div>
+  </section>
+</Layout>

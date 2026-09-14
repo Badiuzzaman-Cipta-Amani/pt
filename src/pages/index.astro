@@ -1,10 +1,270 @@
 ---
+import { ChevronLeft, ChevronRight, Quote } from "@lucide/astro"
+import ArticleCard from "@/components/ArticleCard.astro"
+import CtaBand from "@/components/CtaBand.astro"
+import MisiGrid from "@/components/MisiGrid.astro"
+import SectionHeading from "@/components/SectionHeading.astro"
+import Stats from "@/components/Stats.astro"
+import UnitCard from "@/components/UnitCard.astro"
+import {
+  artikelIntro,
+  csr,
+  hero,
+  investorCta,
+  seo,
+  testimonials,
+  unitUsahaIntro,
+  visi,
+} from "@/data/site"
+import { units } from "@/data/units"
 import Layout from "@/layouts/Layout.astro"
-import { seo } from "@/data/site"
+import { getArticles } from "@/lib/articles"
+
+const articles = await getArticles()
 ---
 
 <Layout title={seo.home.title} description={seo.home.description}>
-  <section class="bg-ink pt-40 pb-24 text-white">
-    <div class="site"><h1 class="t-h1 anim d-1">Smoke</h1></div>
+  <!-- ================= HERO ================= -->
+  <section
+    id="home"
+    class="relative isolate flex min-h-svh w-full flex-col overflow-hidden bg-ink text-white"
+  >
+    <!-- Background image (right side), Ken Burns settle -->
+    <div class="veil absolute inset-y-0 right-0 w-full overflow-hidden lg:w-[62%]">
+      <img
+        src={hero.image}
+        alt=""
+        class="hero-img h-full w-full object-cover object-center grayscale-25"
+      />
+      <!-- gradient veils to blend into the dark left panel -->
+      <div class="absolute inset-0 bg-linear-to-r from-ink via-ink/75 to-ink/10 lg:via-ink/45">
+      </div>
+      <div class="absolute inset-0 bg-linear-to-t from-ink/85 via-transparent to-ink/40"></div>
+    </div>
+
+    <!-- subtle grain -->
+    <div class="grain pointer-events-none absolute inset-0 opacity-[0.06] mix-blend-overlay">
+    </div>
+
+    <div class="site relative z-10 flex flex-1 flex-col justify-end pt-32 pb-10 lg:pb-12">
+      <h1
+        class="max-w-3xl text-[13vw] leading-[1.04] font-light tracking-tight sm:text-7xl lg:text-[5.375rem]"
+      >
+        {
+          hero.lines.map((line, i) => (
+            <span class:list={["anim block", `d-title-${i + 1}`]}>{line}</span>
+          ))
+        }
+      </h1>
+
+      <!-- growing divider -->
+      <div class="d-divider mt-10 h-px w-full bg-white/15 lg:mt-12"></div>
+
+      <!-- Bottom row: label anchored left, description + actions offset toward the centre-right -->
+      <div class="mt-8 flex flex-col gap-8 lg:mt-10 lg:grid lg:grid-cols-12 lg:items-start lg:gap-x-6">
+        <p class="anim d-label t-overline shrink-0 lg:col-span-5">{hero.label}</p>
+
+        <div class="lg:col-span-7 lg:col-start-6 lg:max-w-xl">
+          <p class="anim d-desc text-lg leading-relaxed font-light text-white/85 lg:text-xl">
+            {hero.description}
+          </p>
+          <div class="mt-8 flex flex-wrap items-center gap-4">
+            <a href={hero.primary.href} class="anim d-btn-1 btn btn-light px-7 py-3">
+              {hero.primary.label}
+            </a>
+            <a href={hero.secondary.href} class="anim d-btn-2 btn btn-ghost px-7 py-3">
+              {hero.secondary.label}
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
   </section>
+
+  <!-- ================= VISI KAMI ================= -->
+  <section id="about" class="bg-white">
+    <div class="grid lg:grid-cols-12">
+      <div
+        class="edge-left flex flex-col justify-center pt-20 pr-6 pb-12 md:pr-[calc(var(--gutter)+1.5rem)] lg:col-span-6 lg:pr-12 2xl:col-span-5"
+        data-reveal
+      >
+        <p class="t-eyebrow">{visi.eyebrow}</p>
+        <h2 class="t-h2 mt-8 max-w-[20em]">{visi.statement}</h2>
+      </div>
+
+      <!-- Sand panel with isometric line art, bleeding to the right edge -->
+      <div
+        class="relative h-80 overflow-hidden bg-sand lg:col-span-6 lg:h-[32.5rem] 2xl:col-span-7"
+        data-reveal
+        data-reveal-delay="100"
+      >
+        <svg
+          class="absolute inset-0 h-full w-full"
+          viewBox="0 0 900 520"
+          preserveAspectRatio="xMidYMid slice"
+          fill="none"
+          stroke="#FFFFFF"
+          stroke-opacity="0.9"
+          stroke-width="1"
+          aria-hidden="true"
+        >
+          <polyline points="700,0 230,270 230,520"></polyline>
+          <polyline points="230,270 470,410 900,150"></polyline>
+          <polyline points="230,430 700,160 900,275"></polyline>
+          <line x1="700" y1="160" x2="700" y2="520"></line>
+          <line x1="700" y1="380" x2="900" y2="500"></line>
+          <line x1="470" y1="410" x2="470" y2="520"></line>
+        </svg>
+      </div>
+    </div>
+
+    <Stats />
+  </section>
+
+  <MisiGrid />
+
+  <!-- ================= UNIT USAHA ================= -->
+  <section id="unit-usaha" class="bg-white">
+    <div class="site py-32">
+      <SectionHeading title={unitUsahaIntro.title} text={unitUsahaIntro.intro} />
+      <div class="mt-20 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+        {units.map((unit, i) => <UnitCard unit={unit} delay={i * 100} />)}
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= TESTIMONI ================= -->
+  <section id="testimoni" class="bg-mist">
+    <div class="site py-32">
+      <SectionHeading title={testimonials.title} text={testimonials.intro} />
+      <div class="mt-20 grid gap-6 lg:grid-cols-3">
+        {
+          testimonials.items.map(({ quote, name, role, units: tags }, i) => (
+            <figure class="flex flex-col bg-white p-8" data-reveal data-reveal-delay={i * 100}>
+              <Quote class="h-7 w-7 fill-lime stroke-lime" stroke-width={1} />
+              <blockquote class="t-card mt-6 font-light">{quote}</blockquote>
+              <figcaption class="mt-auto pt-8">
+                <p class="text-base text-body">{name}</p>
+                <p class="t-body text-[0.9375rem]">{role}</p>
+                <div class="mt-4 flex flex-wrap gap-2">
+                  {tags.map((tag) => (
+                    <span class="t-label rounded-full border border-line px-3 py-1 text-[0.6875rem]">
+                      {tag}
+                    </span>
+                  ))}
+                </div>
+              </figcaption>
+            </figure>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= CSR ================= -->
+  <section id="csr" class="bg-white">
+    <div class="site py-32">
+      <div
+        class="relative isolate overflow-hidden rounded-2xl bg-ink px-6 py-24 text-center text-white shadow-card md:py-36"
+        data-reveal
+      >
+        <!-- network lines background -->
+        <svg
+          class="absolute inset-0 -z-10 h-full w-full opacity-60"
+          viewBox="0 0 1200 520"
+          preserveAspectRatio="xMidYMid slice"
+          fill="none"
+          stroke="#fff"
+          stroke-opacity="0.12"
+          stroke-width="1"
+          aria-hidden="true"
+        >
+          <path d="M-20 420 L180 300 L360 380 L540 240 L760 330 L940 200 L1220 300"></path>
+          <path d="M-20 200 L160 120 L340 210 L520 90 L720 180 L900 60 L1220 140"></path>
+          <path d="M180 300 L160 120 M360 380 L340 210 M540 240 L520 90 M760 330 L720 180 M940 200 L900 60"
+          ></path>
+          <path d="M-20 520 L200 460 L420 520 M700 520 L880 440 L1220 500"></path>
+          <path d="M160 120 L340 -20 M520 90 L600 -20 M900 60 L980 -20"></path>
+          <g fill="#fff" fill-opacity="0.35" stroke="none">
+            <circle cx="180" cy="300" r="2.5"></circle>
+            <circle cx="360" cy="380" r="2.5"></circle>
+            <circle cx="540" cy="240" r="2.5"></circle>
+            <circle cx="760" cy="330" r="2.5"></circle>
+            <circle cx="940" cy="200" r="2.5"></circle>
+            <circle cx="160" cy="120" r="2.5"></circle>
+            <circle cx="340" cy="210" r="2.5"></circle>
+            <circle cx="520" cy="90" r="2.5"></circle>
+            <circle cx="720" cy="180" r="2.5"></circle>
+            <circle cx="900" cy="60" r="2.5"></circle>
+          </g>
+        </svg>
+        <div
+          class="absolute inset-0 -z-10 bg-[radial-gradient(60%_60%_at_50%_45%,rgba(255,255,255,0.06),transparent_70%)]"
+        >
+        </div>
+
+        <h2
+          class="mx-auto max-w-3xl text-[2.25rem] leading-tight font-light tracking-tight sm:text-5xl md:text-6xl"
+        >
+          {csr.title}
+        </h2>
+        <p
+          class="mx-auto mt-8 max-w-2xl text-base leading-relaxed font-light text-white/65 md:text-lg"
+        >
+          {csr.body}
+        </p>
+        <a href={csr.cta.href} class="btn btn-flame mt-10 px-7">{csr.cta.label}</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= ARTIKEL ================= -->
+  <section id="artikel" class="rail-wrap bg-white">
+    <div class="site py-32">
+      <div class="grid gap-14 lg:grid-cols-12 lg:gap-x-8">
+        <div class="lg:col-span-4" data-reveal>
+          <h2 class="t-h2">{artikelIntro.title}</h2>
+          <p class="t-body mt-5 max-w-sm">{artikelIntro.intro}</p>
+          <a href={artikelIntro.cta.href} class="btn btn-ghost-ink mt-8">{artikelIntro.cta.label}</a>
+          <div class="mt-8 hidden gap-2 lg:flex">
+            <button
+              type="button"
+              class="rail-prev grid h-12 w-12 place-items-center rounded-full border border-line text-body transition-colors hover:border-body"
+              aria-label="Sebelumnya"
+            >
+              <ChevronLeft class="h-[1.125rem] w-[1.125rem]" stroke-width={1.5} />
+            </button>
+            <button
+              type="button"
+              class="rail-next grid h-12 w-12 place-items-center rounded-full border border-line text-body transition-colors hover:border-body"
+              aria-label="Berikutnya"
+            >
+              <ChevronRight class="h-[1.125rem] w-[1.125rem]" stroke-width={1.5} />
+            </button>
+          </div>
+        </div>
+
+        <!-- Carousel bleeds past the container to the right edge of the viewport -->
+        <div class="min-w-0 lg:col-span-8" data-reveal data-reveal-delay="100">
+          <div class="rail flex snap-x snap-mandatory gap-8 overflow-x-auto pb-4">
+            {
+              articles.map((article) => (
+                <ArticleCard
+                  article={article}
+                  class="w-[17.5rem] shrink-0 snap-start sm:w-[21.25rem]"
+                />
+              ))
+            }
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <CtaBand
+    eyebrow={investorCta.eyebrow}
+    heading={investorCta.heading}
+    cta={investorCta.cta}
+    note={investorCta.note}
+  />
 </Layout>
