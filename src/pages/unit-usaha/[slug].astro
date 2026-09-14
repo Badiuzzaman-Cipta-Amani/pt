@@ -14,7 +14,7 @@ const { unit } = Astro.props
 ---
 
 <Layout title={`${unit.name} — ${brand.name}`} description={unit.summary}>
-  <PageHeader eyebrow="Unit usaha" title={unit.name} lead={unit.sector} />
+  <PageHeader eyebrow="Unit usaha" title={unit.name} lead={unit.summary} />
 
   <section id="unit-detail" class="bg-mist">
     <div class="site py-28 lg:py-32">
