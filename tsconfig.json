@@ -1,5 +1,14 @@
 {
   "extends": "astro/tsconfigs/strict",
   "include": [".astro/types.d.ts", "**/*"],
-  "exclude": ["dist"]
+  "exclude": ["dist"],
+  "compilerOptions": {
+    // Mirrors the `@` -> /src alias declared in astro.config.mjs (vite.resolve.alias).
+    // Vite resolves it at build time; this is what makes the editor and `astro check`
+    // resolve it too.
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["src/*"]
+    }
+  }
 }

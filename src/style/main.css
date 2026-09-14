@@ -1,14 +1,44 @@
 @import "tailwindcss";
 
 @theme {
-  --color-primary: #002144;
-  --color-primary-light: #003366;
-  --color-primary-dark: #00152e;
-  --color-secondary: #d4a124;
-  --color-secondary-light: #e8b83a;
-  --color-secondary-dark: #b88a1a;
+  /* One brand hue, and these three values are the whole of it. `primary` is the
+     gold; `primary-light` and `primary-dark` are the same gold either side of it.
+     Re-tinting the brand means editing these three and nothing else — there used
+     to be an eleven-step `primary-50…950` ramp here that nothing referenced, and
+     a `secondary` set to a second, slightly different gold, which only ever read
+     as the palette being inconsistent with itself. */
+  --color-primary: #c6a15b;
+  --color-primary-light: #ddc286;
+  --color-primary-dark: #8a6836;
+
+  /* The `secondary` names are kept because the markup and the blocks below
+     already use them (`bg-secondary` on the footer's subscribe hover, the Misi
+     progress bar, list markers), but they are the primary gold — there is no second brand
+     colour to point them at. Nothing points *text* at them any more: every piece
+     of copy on the page is black or white, and the gold is only ever a fill, a
+     border or a marker. */
+  --color-secondary: var(--color-primary);
+  --color-secondary-light: var(--color-primary-light);
+  --color-secondary-dark: var(--color-primary-dark);
+
   --color-ink: #080c14;
   --color-ink-soft: #0d1321;
+
+  /* The page ground, and the site's default background — `body` paints it, and every
+     light section either inherits it or restates it as `bg-canvas`. Warm off-white
+     rather than pure white. `canvas-soft` is the same colour on purpose: sections used
+     to alternate between two near-identical creams, which only ever showed up as a
+     faint seam, so the whole page now sits on one ground. */
+  --color-canvas: #fcfaf6;
+  --color-canvas-soft: #fcfaf6;
+
+  /* Reading black, and the colour of every piece of text on a light ground: body
+     copy, headings, kickers, nav links in the solid state. Not `ink` (which is
+     nearly navy-black and now only ever a background) and not #000 — this is the
+     "fully black but not too black" reading colour. `carbon-soft` is its muted
+     step, for supporting paragraphs and meta rows. */
+  --color-carbon: #141414;
+  --color-carbon-soft: #4a4a4a;
 
   --font-sans: "Manrope", ui-sans-serif, system-ui, sans-serif;
   --font-serif: "Lora", Georgia, "Times New Roman", serif;
@@ -40,19 +70,35 @@
 }
 
 @layer base {
-  html {
-    scroll-behavior: smooth;
-  }
+  /* NOTE: no `scroll-behavior: smooth` here on purpose. GSAP ScrollSmoother drives
+     the scroll (see src/scripts/motion.ts) and the native property fights it — anchor
+     jumps end up doubly eased and ScrollTrigger reads stale positions mid-flight.
+     Anchor links go through `smoother.scrollTo()` instead. The reduced-motion block
+     at the bottom of this file re-enables native scrolling, since ScrollSmoother is
+     never created in that case. */
 
   body {
     font-family: var(--font-sans);
     -webkit-font-smoothing: antialiased;
+    background-color: var(--color-canvas);
+    /* Every piece of running text on the page is black or white and nothing else:
+       `carbon` on the light ground, `#ffffff` on the dark sections. The gold is a
+       non-text colour now — borders, the dot grid, list markers, button fills —
+       so `ink` is only ever a background here, never a text colour. */
+    color: var(--color-carbon);
+  }
+
+  /* ScrollSmoother transforms #smooth-content, so the wrapper is what actually
+     clips. Declared here rather than left to the plugin so the layout is stable on
+     the very first paint, before the script has run. */
+  #smooth-wrapper {
+    overflow: hidden;
   }
 
   /* Browser surfaces we did not draw still belong to the palette. */
   ::selection {
     background: color-mix(in srgb, var(--color-secondary) 32%, transparent);
-    color: var(--color-primary-dark);
+    color: var(--color-carbon);
   }
 
   :focus-visible {
@@ -65,12 +111,12 @@
     width: 10px;
   }
   ::-webkit-scrollbar-track {
-    background: #f4f2ed;
+    background: var(--color-canvas);
   }
   ::-webkit-scrollbar-thumb {
     background: color-mix(in srgb, var(--color-primary) 28%, #ffffff);
     border-radius: 999px;
-    border: 2px solid #f4f2ed;
+    border: 2px solid var(--color-canvas);
   }
   ::-webkit-scrollbar-thumb:hover {
     background: color-mix(in srgb, var(--color-primary) 48%, #ffffff);
@@ -86,8 +132,19 @@
   }
 }
 
+/* The page measure. 80% of the viewport with no upper cap: the content keeps a
+   generous gutter on every screen, so there is no max-width to bump into and no
+   horizontal padding on top of the 10% margin the width already leaves. */
 @utility shell {
-  @apply mx-auto w-full max-w-300 px-6;
+  @apply mx-auto w-[80%] max-w-none px-0;
+}
+
+/* `shell-wide` used to be the roomier measure for page furniture — the navbar, the
+   hero headline block, the footer. Now that `shell` is itself 80% of the viewport the
+   two are the same measure, and this is kept as the name those blocks already use so
+   the distinction can come back without touching every component. */
+@utility shell-wide {
+  @apply mx-auto w-[80%] max-w-none px-0;
 }
 
 @layer components {
@@ -101,6 +158,127 @@
     padding-inline: 1.5rem;
   }
 
+  /* --- Display type --------------------------------------------------------
+     Three display sizes and one micro-label, and that is the entire heading
+     system. Every heading on the page used to set its own size/weight/tracking
+     combination inline — semibold navy in one section, medium primary in the
+     next, a serif italic inside Karya — so the page read as several typefaces.
+     They all pick one of these now: same family, same weight, same tracking as
+     the hero, and only the size changes down the page.
+
+     That weight is **bold**. The whole system ran at 300 until the headings were
+     asked to carry more force; the sizes and the tracking are unchanged, and the
+     tighter tracking below is what keeps a bold display size from looking loose
+     at 4.5rem. Anything that has to read as one typeface with these — the
+     statement in Tentang, the mobile menu — moved with them, so there is no
+     light display type left on the page.
+
+     `display-1` is the hero headline and is deliberately the only thing using
+     that size. Section headings are `display-2`; card titles are `display-3`.
+     Sizes are viewport-relative rather than steps on the `--text-*` scale,
+     which stays what running copy is set in. */
+  .display-1,
+  .display-2,
+  .display-3 {
+    font-family: var(--font-sans);
+    font-weight: 700;
+    letter-spacing: -0.03em;
+  }
+
+  .display-1 {
+    font-size: clamp(2.5rem, 5vw, 4.5rem);
+    line-height: 1.05;
+  }
+
+  .display-2 {
+    font-size: clamp(1.875rem, 3.6vw, 3.25rem);
+    line-height: 1.1;
+  }
+
+  .display-3 {
+    font-size: clamp(1.25rem, 1.7vw, 1.5rem);
+    font-weight: 600;
+    line-height: 1.3;
+    letter-spacing: -0.02em;
+  }
+
+  /* The uppercase micro-label that sits above a section heading. Colour is the
+     light-section default (black); the two kickers on dark grounds — the CTA and
+     the unit-usaha reveal — override it with a `text-white/70` utility, which wins
+     because utilities are layered after components. */
+  .kicker {
+    font-size: var(--text-xs);
+    font-weight: 600;
+    line-height: 1.4;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--color-carbon);
+  }
+
+  /* The kicker in a pill. Same micro-label, drawn as an outlined chip with a gold dot
+     in front of it — the form every section header above a heading now uses (Tentang,
+     Unit Usaha, Misi). The dot is a pseudo-element rather than an icon so the pill
+     costs no markup and no request. The kickers left on the bare `.kicker` are the ones
+     that are not a section header: the CTA's, Karya's two, and the tag on a Misi card. */
+  .pill-kicker {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    border: 1px solid color-mix(in srgb, var(--color-carbon) 18%, transparent);
+    border-radius: 999px;
+    padding: 0.35rem 0.9rem;
+    font-size: var(--text-xs);
+    font-weight: 600;
+    line-height: 1.4;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--color-carbon);
+  }
+
+  .pill-kicker::before {
+    content: "";
+    width: 0.4rem;
+    height: 0.4rem;
+    border-radius: 999px;
+    background: var(--color-primary);
+  }
+
+  /* The same pill on a dark ground — Misi. A modifier rather than a utility override:
+     the border and the label both have to move, and the label's colour would otherwise
+     need a `!important` to beat the component rule. */
+  .pill-kicker.is-light {
+    border-color: rgba(255, 255, 255, 0.28);
+    color: rgba(255, 255, 255, 0.85);
+  }
+
+  .pill-kicker.is-light::before {
+    background: var(--color-primary-light);
+  }
+
+  /* The small caps link that leads out of a section — currently just the one, from the
+     six units on the landing page to all twelve. The hover opens the gap rather than
+     moving the whole link, so the arrow travels and the label stays put. */
+  .link-underline {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    border-bottom: 1px solid color-mix(in srgb, var(--color-carbon) 35%, transparent);
+    padding-bottom: 0.35rem;
+    font-size: var(--text-xs);
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--color-carbon);
+    transition:
+      border-color 0.3s ease,
+      gap 0.3s ease;
+  }
+
+  .link-underline:hover {
+    border-color: var(--color-carbon);
+    gap: 0.85rem;
+  }
+
   .card-lift {
     transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
   }
@@ -110,7 +288,9 @@
   }
 
   .glow-gold {
-    filter: drop-shadow(0 0 20px rgba(212, 161, 36, 0.25));
+    filter: drop-shadow(
+      0 0 20px color-mix(in srgb, var(--color-primary) 25%, transparent)
+    );
   }
 
   /* Photographic ground for a section. The photo is desaturated with a CSS
@@ -139,7 +319,7 @@
     mask-image: linear-gradient(
       to bottom,
       rgba(0, 0, 0, 0.1) 0%,
-      rgba(0, 0, 0, .6) 20%,
+      rgba(0, 0, 0, 0.6) 20%,
       transparent 100%
     );
   }
@@ -213,7 +393,9 @@
     box-shadow: none;
   }
 
-  /* Sticky card stack (Layanan). Each card carries its own `top` and `z-index`
+  /* Sticky card stack. Nothing on the page uses this — it was written for a version of
+     the Layanan section that no longer exists (that section is Misi now, a plain grid).
+     Each card carries its own `top` and `z-index`
      inline — one step lower and one layer higher than the previous card — so the
      stack works for any number of cards and they deal on top of each other as
      you scroll instead of scrolling away. The offsets must clear the sticky
@@ -229,30 +411,1021 @@
       height: 70vh;
     }
   }
-}
 
-@keyframes marquee {
-  0% {
+  /* ---------------------------------------------------------------------------
+     Landing page. Everything below belongs to src/pages/index.astro and the
+     components under src/components/landing/. Values that the palette should be
+     able to move are written as `color-mix` over the brand tokens rather than as
+     literal colours, so re-tinting the site never means editing this block.
+     -------------------------------------------------------------------------- */
+
+  /* Faint dot grid, and the ground every light section on the page sits on — Unit
+     Usaha, Kinerja, Visi, Misi and both Karya blocks all carry it, so the texture is
+     continuous from the hero to the CTA rather than appearing once in the gallery.
+     Tinted with the navy so it reads as part of the palette instead of a neutral
+     screen texture, and kept at a 24px cell — larger and it becomes a pattern you
+     notice, smaller and it muddies into a flat tone.
+
+     The cell and the tint live in custom properties because `.stats-bg` cannot use
+     this class (it paints a gradient of its own through the same `background`
+     shorthand) and restates the layer instead. */
+  :root {
+    --dot-cell: 24px;
+    --dot-ink: color-mix(in srgb, var(--color-primary) 15%, transparent);
+  }
+
+  .dot-pattern {
+    background-image: radial-gradient(circle, var(--dot-ink) 1px, transparent 1px);
+    background-size: var(--dot-cell) var(--dot-cell);
+  }
+
+  /* --- Section textures ----------------------------------------------------- */
+
+  /* Two very large, very faint radial washes — warm gold from one top corner, a cool
+     slate from the opposite bottom one — so a light section has some colour moving
+     across it without anything on the page having to become a picture. They are drawn
+     on a pseudo-element rather than added to `background`, which leaves the section free
+     to keep `.dot-pattern` on its own background shorthand; the parent therefore needs
+     `relative`, and the negative z-index is what keeps the wash behind the content while
+     still painting over the section's own background colour.
+
+     Both are held low enough that they read as a tint on the cream rather than as
+     shapes. If a wash ever becomes something you can point at, it is too strong. */
+  .section-aurora {
+    position: relative;
+    isolation: isolate;
+  }
+
+  .section-aurora::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    background:
+      radial-gradient(
+        46rem 30rem at 10% -5%,
+        color-mix(in srgb, var(--color-primary) 20%, transparent) 0%,
+        transparent 68%
+      ),
+      radial-gradient(
+        42rem 28rem at 92% 104%,
+        color-mix(in srgb, #5b7fa6 16%, transparent) 0%,
+        transparent 70%
+      );
+  }
+
+  /* The film grain plate, the same SVG turbulence the CTA uses. It exists for the same
+     reason it does there: a wide gradient is a gradient however it is drawn, and grain
+     is what stops it banding on an 8-bit display. `overlay` so it darkens and lightens
+     the ground rather than greying it. */
+  .texture-grain {
+    position: relative;
+    isolation: isolate;
+  }
+
+  .texture-grain::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    opacity: 0.28;
+    mix-blend-mode: overlay;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E");
+  }
+
+  /* --- Unit usaha ---------------------------------------------------------- */
+
+  /* The bento on the landing page: six cells over six columns, three rows deep. The
+     spans themselves are utilities in UnitUsaha.astro, next to the diagram of the
+     layout they make; what lives here is the frame they hang in.
+
+     `grid-auto-rows` is a fixed height and not `auto` on purpose. The tiles are
+     photographs, so with `auto` every row would take its own image's intrinsic height
+     and the composition — which is entirely a matter of which cell is twice the size of
+     which — would collapse into a ragged list.
+
+     Below `md` there are no spans at all (they are all `md:` utilities) and this is two
+     even columns: a bento at a phone's width is six stacked rectangles, and the spans
+     only make some of them needlessly tall. */
+  .unit-bento {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    grid-auto-rows: 15rem;
+    gap: 0.75rem;
+  }
+
+  /* The row height is the size of the whole block, and it is meant to be large: each
+     row is one tile tall, so this number alone decides whether the photographs are the
+     section or a strip of thumbnails under the heading. At 32vw a half cell inside the
+     80% shell comes out at roughly 1.2 : 1 and the wide one at 2.4 : 1, which is the
+     proportion the layout is drawn for. */
+  @media (min-width: 640px) {
+    .unit-bento {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      grid-auto-rows: clamp(16rem, 32vw, 34rem);
+      gap: 1rem;
+    }
+  }
+
+  /* /unit-usaha has no bento — twelve tiles is a list, not a composition — so its cells
+     are a plain ratio and the tile fills them the same way it fills a bento cell. */
+  .unit-cell {
+    aspect-ratio: 4 / 3;
+  }
+
+  /* A photographic tile carrying the unit's lock-up. At rest: the photograph, darkened,
+     the lock-up on its plate in the middle and the name along the bottom. On hover or
+     focus the picture comes up to full colour, the plate lifts to make room, and the
+     blurb and the visit link open underneath the name.
+
+     Two things keep the grid honest. The tile is `height: 100%`, so its size is the
+     cell's and never its contents'; and everything inside it is absolutely positioned
+     for the same reason — a long blurb can crowd a small tile but it can never resize
+     one. Blurbs are still meant to be about one line (see `unitUsaha` in
+     src/data/site.ts) and the reveal clamps them at two. */
+  .unit-tile {
+    position: relative;
+    display: block;
+    height: 100%;
+    overflow: hidden;
+    border-radius: 1rem;
+    background: var(--color-ink);
+    isolation: isolate;
+    transition: box-shadow 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .unit-tile:hover,
+  .unit-tile:focus-within {
+    box-shadow: 0 28px 60px -28px rgba(0, 0, 0, 0.55);
+  }
+
+  .unit-tile-photo {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: grayscale(0.65) brightness(0.62);
+    transform: scale(1.05);
+    transition:
+      transform 1.1s cubic-bezier(0.16, 1, 0.3, 1),
+      filter 0.6s ease;
+  }
+
+  .unit-tile:hover .unit-tile-photo,
+  .unit-tile:focus-within .unit-tile-photo {
+    filter: grayscale(0) brightness(0.52);
+    transform: scale(1);
+  }
+
+  /* Dark enough at the foot for the name to sit on it at any tile size, and nearly
+     clear across the top so the photograph is still a photograph. */
+  .unit-tile-scrim {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      180deg,
+      rgba(0, 0, 0, 0.18) 0%,
+      rgba(0, 0, 0, 0.1) 38%,
+      rgba(0, 0, 0, 0.74) 100%
+    );
+  }
+
+  /* The lock-up, straight on the photograph and painted white — the plate it used to sit
+     on is gone. Both files in `public/units/` are drawn for a light ground, so neither
+     can be laid on a darkened photo as it is; `brightness(0) invert(1)` crushes the
+     all-black variant (`logo`, not `logoHover`) to a pure white silhouette, which is
+     what the artwork is for on a photograph. The drop shadow is what keeps it off a
+     bright patch of sky.
+
+     The lift animates `top`, not `transform`: the `translate(-50%, -50%)` that centres
+     the mark has to stay put, and a `top` expressed as a share of the tile lifts it by
+     the same fraction of the cell whatever size that cell is — where a percentage
+     translate would be a share of the mark's own height instead. Lifted to 28% against
+     an 18% height, the mark spans 19%–37% and clears the panel's 38% top edge; the two
+     numbers are a pair. */
+  /* The width is capped as well as proportional. The bento's wide cell is twice the
+     width of a half cell, and a bare percentage would put a lock-up twice the size on
+     it — the marks have to read as one set across the block, whatever cell each is in.
+     The height stays a plain percentage: every row is the same height, so it already
+     is one number across the grid. */
+  .unit-tile-mark {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: min(58%, 20rem);
+    height: 18%;
+    transform: translate(-50%, -50%);
+    transition: top 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .unit-tile:hover .unit-tile-mark,
+  .unit-tile:focus-within .unit-tile-mark {
+    top: 28%;
+  }
+
+  .unit-tile-mark img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    filter: brightness(0) invert(1) drop-shadow(0 2px 10px rgba(0, 0, 0, 0.55));
+  }
+
+  /* Nothing shows at rest — the tile is a photograph and a white mark, and the name,
+     blurb and visit link are one centred column that opens under the mark on hover or
+     focus. The copy is real text held at zero opacity rather than text added on hover,
+     so a screen reader has it either way; `tabindex` on the tile is what opens the
+     panel from the keyboard, since the visit link is `aria-disabled` and unfocusable
+     while every `url` is still `#`. */
+  /* `left: 0; right: 0` with a max-width and auto side margins is what centres the
+     panel: on the bento's wide cell an unconstrained panel would set the blurb in one
+     very long line across the whole photograph. */
+  .unit-tile-panel {
+    position: absolute;
+    inset: 38% 0 auto 0;
+    max-width: 34rem;
+    margin-inline: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-inline: 1.25rem;
+    text-align: center;
+    color: #ffffff;
+    opacity: 0;
+    transform: translateY(10px);
+    pointer-events: none;
+    transition:
+      opacity 0.35s ease,
+      transform 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .unit-tile:hover .unit-tile-panel,
+  .unit-tile:focus-within .unit-tile-panel {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+  }
+
+  .unit-tile-name {
+    font-size: var(--text-base);
+    font-weight: 700;
+    line-height: 1.3;
+  }
+
+  .unit-tile-blurb {
+    margin-top: 0.4rem;
+    font-size: var(--text-sm);
+    line-height: 1.5;
+    color: rgba(255, 255, 255, 0.85);
+  }
+
+  .unit-visit {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    margin-top: 0.75rem;
+    font-size: var(--text-xs);
+    font-weight: 600;
+    border: 1px solid rgba(255, 255, 255, 0.6);
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.12);
+    padding: 0.4rem 0.9rem;
+    color: #ffffff;
+    transition:
+      background-color 0.3s ease,
+      border-color 0.3s ease,
+      color 0.3s ease;
+  }
+
+  .unit-visit:hover {
+    background: #ffffff;
+    border-color: #ffffff;
+    color: #000000;
+  }
+
+  /* Placeholder until the subsidiary sites exist (`url: "#"` in site.ts). It keeps its
+     place in the reveal but does not pretend to lead anywhere.
+
+     Every unit is still on `#`, so this is the state the button is actually seen in —
+     it is held just below full strength, not faded out. */
+  .unit-visit[aria-disabled="true"] {
+    opacity: 0.8;
+    cursor: default;
+  }
+
+  /* Restates the resting look rather than clearing it: the hover fill must not read as
+     a state change on a link that does not lead anywhere. */
+  .unit-visit[aria-disabled="true"]:hover {
+    background: rgba(255, 255, 255, 0.12);
+    border-color: rgba(255, 255, 255, 0.6);
+    color: #ffffff;
+  }
+
+  /* --- Navbar -------------------------------------------------------------- */
+
+  /* Two states, one class. Over the hero the bar is transparent with white type; the
+     `is-solid` class — added by motion.ts once the hero has scrolled past — turns it
+     into a frosted light bar with black type. Kept as descendant rules rather than the
+     pile of `classList.add/remove` calls it started as: the JS now owns one class and
+     every child transitions a single property. */
+  .site-nav {
+    transition:
+      background 0.4s ease,
+      box-shadow 0.4s ease,
+      backdrop-filter 0.4s ease;
+  }
+
+  .site-nav.is-solid {
+    background: color-mix(in srgb, var(--color-canvas-soft) 90%, transparent);
+    -webkit-backdrop-filter: blur(12px);
+    backdrop-filter: blur(12px);
+    box-shadow: 0 1px 24px -12px rgba(0, 33, 68, 0.45);
+  }
+
+  .nav-wordmark,
+  .nav-link,
+  .nav-cta,
+  .nav-burger {
+    transition:
+      color 0.3s ease,
+      background 0.3s ease,
+      border-color 0.3s ease,
+      transform 0.3s ease;
+  }
+
+  /* The wordmark is an image, so the `color` flip below reaches nothing inside it — the
+     white and gold lock-ups are stacked and cross-faded instead, the same trick as
+     `.unit-mark`. All three PNGs are the same 2056×762, so the two register exactly and
+     only opacity moves: nothing reflows on the flip. `color` stays for the text
+     fallback if the images ever fail to load. */
+  .nav-wordmark {
+    position: relative;
+    display: inline-block;
+    color: #ffffff;
+  }
+
+  .nav-logo {
+    transition: opacity 0.4s ease;
+  }
+
+  /* Out of flow and matched to the box the white one establishes. */
+  .nav-logo-solid {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    opacity: 0;
+  }
+
+  .site-nav.is-solid .nav-logo-hero {
+    opacity: 0;
+  }
+
+  .site-nav.is-solid .nav-logo-solid {
+    opacity: 1;
+  }
+
+  .nav-link {
+    color: rgba(255, 255, 255, 0.72);
+  }
+
+  .nav-link:hover {
+    color: #ffffff;
+  }
+
+  .nav-cta {
+    background: #ffffff;
+    color: var(--color-carbon);
+  }
+
+  .nav-cta:hover {
+    transform: translateY(-1px);
+  }
+
+  .nav-burger {
+    background: rgba(255, 255, 255, 0.12);
+    border: 1px solid rgba(255, 255, 255, 0.24);
+    color: #ffffff;
+  }
+
+  .nav-burger:hover {
+    background: rgba(255, 255, 255, 0.22);
+  }
+
+  .site-nav.is-solid .nav-wordmark {
+    color: var(--color-carbon);
+  }
+
+  .site-nav.is-solid .nav-link {
+    color: var(--color-carbon-soft);
+  }
+
+  .site-nav.is-solid .nav-link:hover {
+    color: var(--color-carbon);
+  }
+
+  .site-nav.is-solid .nav-cta {
+    background: var(--color-primary);
+    color: #ffffff;
+  }
+
+  .site-nav.is-solid .nav-burger {
+    background: color-mix(in srgb, var(--color-primary) 8%, transparent);
+    border-color: color-mix(in srgb, var(--color-primary) 20%, transparent);
+    color: var(--color-carbon);
+  }
+
+  /* --- Hero ---------------------------------------------------------------- */
+
+  /* The full-bleed film. It is slightly larger than the section on purpose: GSAP
+     nudges it a few pixels for the mouse parallax and slowly scales it, and an
+     element sized exactly to the box would show the ink ground at an edge before
+     either of those settles. `object-fit: cover` keeps the framing at any ratio. */
+  .hero-video {
+    position: absolute;
+    inset: -1.5%;
+    width: 103%;
+    height: 103%;
+    object-fit: cover;
+    object-position: center;
+  }
+
+  /* Dark at the top for the navbar, dark at the bottom for the headline, and
+     almost clear through the middle third where the film has to carry itself. */
+  .hero-scrim {
+    position: absolute;
+    inset: 0;
+    z-index: 10;
+    pointer-events: none;
+    background: linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--color-ink) 38%, transparent) 0%,
+      color-mix(in srgb, var(--color-ink) 6%, transparent) 35%,
+      color-mix(in srgb, var(--color-ink) 55%, transparent) 65%,
+      color-mix(in srgb, var(--color-ink) 88%, transparent) 100%
+    );
+  }
+
+  /* --- Mobile menu --------------------------------------------------------- */
+
+  .menu-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 100;
+    background: color-mix(in srgb, var(--color-ink) 45%, transparent);
+    -webkit-backdrop-filter: blur(4px);
+    backdrop-filter: blur(4px);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+  }
+
+  .menu-overlay.is-open {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .menu-panel {
+    position: fixed;
+    inset-block: 0;
+    right: 0;
+    z-index: 101;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    padding: 2rem;
+    background: var(--color-canvas-soft);
+    transform: translateX(100%);
+    transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .menu-panel.is-open {
     transform: translateX(0);
   }
-  100% {
-    transform: translateX(var(--marquee-shift, -50%));
-  }
-}
 
-/* Seamless loop invariants — break either one and the seam jumps or goes blank:
-   1. The track holds N identical copies (shrink-0, each with a trailing gap
-      equal to its inner gap) and shifts by exactly one copy: -100%/N, passed
-      in as --marquee-shift by the markup that knows N.
-   2. The remaining N-1 copies must still overflow the viewport, or the tail
-      scrolls into view as empty space just before the reset. */
-.marquee-track {
-  animation: marquee 34s linear infinite;
-  will-change: transform;
-  backface-visibility: hidden;
-}
-.marquee-track:hover {
-  animation-play-state: paused;
+  /* Above `sm` the panel stops being full-bleed and becomes a rounded sheet. */
+  @media (min-width: 640px) {
+    .menu-panel {
+      width: 420px;
+      border-radius: 24px 0 0 24px;
+    }
+  }
+
+  /* Deliberately outside the shared type scale: these are display-size targets,
+     not running copy, and they size off the viewport so the list always fills the
+     panel between the header and the CTA. Weight and tracking still follow the
+     `display-*` rules above — the point is that the menu reads as the same
+     typeface as the headings behind it, whatever weight those are set at. */
+  .menu-item {
+    display: flex;
+    align-items: baseline;
+    gap: 0.5rem;
+    font-size: clamp(2rem, 7vw, 2.75rem);
+    font-weight: 700;
+    line-height: 1.1;
+    letter-spacing: -0.03em;
+    text-transform: uppercase;
+    color: var(--color-carbon);
+    transition: opacity 0.2s ease;
+  }
+
+  .menu-item:hover {
+    opacity: 0.5;
+  }
+
+  /* --- Tentang (Visi + Kinerja) --------------------------------------------- */
+
+  /* The section's own ground: the page's dot grid over a gold wash that deepens down
+     the block, so the statement starts on the plain canvas and the figures sit on
+     colour. This is the old `.stats-bg` idea brought back for the merged section — and
+     the reason `--dot-cell` / `--dot-ink` are on `:root`. The dots cannot come from
+     `.dot-pattern` here, because that class and this gradient both want the same
+     `background` shorthand; they are restated as the first layer instead, which is also
+     what puts them on top of the gradient rather than under it. */
+  .tentang-bg {
+    /* The section's own grid: tighter than the page's 24px cell and inked in the
+       reading black rather than the gold, so it reads as ruled paper under the
+       statement instead of as a tint. Both are overridden locally, not on `:root`, so
+       every other section keeps the page's own dots. */
+    --dot-cell: 20px;
+    --dot-ink: color-mix(in srgb, var(--color-carbon) 16%, transparent);
+
+    background:
+      radial-gradient(circle, var(--dot-ink) 1px, transparent 1px) 0 0 / var(--dot-cell)
+        var(--dot-cell),
+      linear-gradient(
+        180deg,
+        var(--color-canvas) 0%,
+        color-mix(in srgb, var(--color-primary) 4%, var(--color-canvas)) 55%,
+        color-mix(in srgb, var(--color-primary) 9%, var(--color-canvas)) 100%
+      );
+  }
+
+  /* Visi and Kinerja were two sections; they are one now — the statement, and the
+     figures that back it, in one column. What is gone with them: `.stats-bg` (the
+     section's own gradient ground, replaced by the page's plain canvas and dot grid),
+     `.kinerja-carousel` and its slides, and the hairline rules between the figures.
+     The figures are an icon and two lines of type each now, so a rule between them
+     would be a third thing to read. */
+
+  /* The statement. Still the one block on the page set larger than a section heading —
+     it is a statement, not a headline — but it now shares its section with the figures
+     and lives in a two-thirds column, so it is a notch below the display-1 sizes it
+     used to run at. Weight and tracking match `display-1`, so it still reads as the
+     same typeface as the hero. Applied to the <p> inside the TextScrollReveal island,
+     whose words inherit from it. */
+  .vision-text {
+    font-size: clamp(1.625rem, 3.4vw, 3rem);
+    font-weight: 700;
+    line-height: 1.25;
+    letter-spacing: -0.03em;
+  }
+
+  /* The gold square behind each figure's glyph. The one place on the page where the
+     brand colour is a fill under white — every other gold is a border, a marker or a
+     dot — which is exactly what makes the row of four read as a set. */
+  .stat-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.75rem;
+    height: 2.75rem;
+    border-radius: 0.85rem;
+    background: linear-gradient(
+      155deg,
+      var(--color-primary-light) 0%,
+      var(--color-primary-dark) 100%
+    );
+    color: #ffffff;
+    box-shadow: 0 12px 26px -16px
+      color-mix(in srgb, var(--color-primary) 90%, transparent);
+  }
+
+  /* Tabular figures so the counter does not reflow the title while it runs up. */
+  .stat-number {
+    font-variant-numeric: tabular-nums;
+    letter-spacing: -0.01em;
+  }
+
+  .stat-title {
+    color: var(--color-carbon);
+  }
+
+  .stat-label {
+    color: var(--color-carbon-soft);
+  }
+
+  /* --- Misi ---------------------------------------------------------------- */
+
+  /* A tall photographic card with a dark panel across its foot. Everything is legible
+     at rest — there is no hover state on the card at all — because all four pillars are
+     meant to be read in one pass.
+
+     The card is a column that pushes its panel to the bottom, and the panel is a flex
+     item rather than an absolutely positioned box: a longer body grows it upward into
+     the photograph instead of overflowing the card. All four stay the same height
+     regardless, because a grid stretches its items to the row.
+
+     The panel carries no solid background of its own — the gradient IS the background,
+     running from transparent through to the footer's ink over the panel's own top
+     padding. That padding is therefore load-bearing: shrink it and the photograph ends
+     in a hard edge instead of fading into the panel. */
+  .misi-card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    overflow: hidden;
+    min-height: clamp(20rem, 32vw, 26rem);
+    border-radius: 1rem;
+    background: var(--color-ink);
+    isolation: isolate;
+  }
+
+  .misi-card-photo {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .misi-panel {
+    position: relative;
+    padding: 4.5rem 1.35rem 1.5rem;
+    background: linear-gradient(
+      180deg,
+      transparent 0%,
+      color-mix(in srgb, var(--color-ink-soft) 72%, transparent) 42%,
+      var(--color-ink-soft) 76%,
+      var(--color-ink-soft) 100%
+    );
+  }
+
+  .misi-panel-head {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+  }
+
+  /* The one gold thing on the card, and the only reason the four cards read as a set
+     rather than as four photographs. */
+  .misi-icon {
+    flex-shrink: 0;
+    color: var(--color-primary);
+  }
+
+  .misi-title {
+    font-size: var(--text-base);
+    font-weight: 700;
+    line-height: 1.3;
+    color: #ffffff;
+  }
+
+  .misi-body {
+    margin-top: 0.6rem;
+    font-size: var(--text-sm);
+    line-height: 1.6;
+    color: rgba(255, 255, 255, 0.72);
+  }
+
+  /* --- Magang -------------------------------------------------------------- */
+
+  /* Three columns: the photograph, the vacancy card, and the copy. The first two are
+     the fixed pair — the photograph carries the row's height through its `4 / 5` ratio
+     and the card stretches to it — so the copy on the right can run to whatever length
+     it needs without the row going ragged. Below `lg` the grid is one column and all
+     three heights are their own. */
+  .magang-photo,
+  .magang-board {
+    overflow: hidden;
+    border-radius: 1rem;
+  }
+
+  .magang-photo {
+    aspect-ratio: 4 / 5;
+    background: color-mix(in srgb, var(--color-primary) 8%, var(--color-canvas));
+  }
+
+  .magang-photo img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .magang-board {
+    display: flex;
+    flex-direction: column;
+    border: 1px solid color-mix(in srgb, var(--color-carbon) 12%, transparent);
+    padding: 1.25rem;
+    background: #ffffff;
+  }
+
+  .magang-board-head {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1rem;
+    padding-bottom: 1.25rem;
+    color: var(--color-carbon);
+  }
+
+  .magang-board-arrow {
+    display: inline-flex;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    width: 2.25rem;
+    height: 2.25rem;
+    border-radius: 999px;
+    background: color-mix(in srgb, var(--color-carbon) 6%, transparent);
+    color: var(--color-carbon);
+    transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .magang-board-head:hover .magang-board-arrow {
+    transform: translate(3px, -3px);
+  }
+
+  /* The one highlighted intake. `margin-top: auto` on nothing above it and a fixed image
+     ratio below: the item sits under the header row and the card's own padding closes
+     the bottom, so a longer role line lengthens the card rather than cropping the
+     picture. */
+  .magang-board-item {
+    border-top: 1px solid color-mix(in srgb, var(--color-carbon) 12%, transparent);
+    padding-top: 1.25rem;
+  }
+
+  .magang-board-item img {
+    width: 100%;
+    aspect-ratio: 8 / 5;
+    object-fit: cover;
+    border-radius: 0.6rem;
+  }
+
+  .magang-board-period {
+    margin-top: 1rem;
+    color: var(--color-carbon-soft);
+  }
+
+  .magang-board-role {
+    margin-top: 0.4rem;
+    font-size: var(--text-base);
+    font-weight: 700;
+    line-height: 1.35;
+    color: var(--color-carbon);
+  }
+
+  .magang-board-note {
+    margin-top: 0.35rem;
+    font-size: var(--text-sm);
+    color: var(--color-carbon-soft);
+  }
+
+  /* Hairlines between the rows and none above the first, so the list reads as a
+     continuation of the paragraph above it rather than as a boxed table. */
+  .magang-item + .magang-item {
+    margin-top: 1.25rem;
+    border-top: 1px solid color-mix(in srgb, var(--color-carbon) 12%, transparent);
+    padding-top: 1.25rem;
+  }
+
+  .magang-item-title {
+    font-size: var(--text-base);
+    font-weight: 700;
+    color: var(--color-carbon);
+  }
+
+  .magang-item-body {
+    margin-top: 0.25rem;
+    max-width: 46ch;
+    font-size: var(--text-sm);
+    line-height: 1.6;
+    color: var(--color-carbon-soft);
+  }
+
+  .magang-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    border-radius: 999px;
+    padding: 0.8rem 1.6rem;
+    background: var(--color-carbon);
+    font-size: var(--text-base);
+    font-weight: 600;
+    color: #ffffff;
+    transition:
+      transform 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+      background-color 0.3s ease;
+  }
+
+  .magang-cta:hover {
+    transform: translateY(-2px);
+    background: var(--color-primary-dark);
+  }
+
+  /* --- Kepedulian ---------------------------------------------------------- */
+
+  /* One photograph with the whole block of copy set inside it, along the top edge and
+     centred. The frame is sized by ratio and everything in it is absolutely positioned,
+     so the copy can crowd the picture but never stretch it — and the ratio is much
+     taller on a phone because the same words need more of the picture there.
+
+     `.csr-scrim` is what makes the copy readable: ink washing down from the top edge
+     only, so the lower two thirds of the photograph are left alone. */
+  /* No ratio on a phone, and the copy stays in the flow: the same words need a good deal
+     more of the picture at 360px than at 1440, and a fixed ratio there is how the last
+     line of the paragraph ends up outside the frame. The picture is absolute either way,
+     so it covers whatever height the copy asks for. From `sm` the frame is a ratio and
+     the copy goes back to being pinned to the top edge. */
+  .csr-frame {
+    position: relative;
+    overflow: hidden;
+    border-radius: 1.25rem;
+    min-height: 26rem;
+    background: var(--color-ink);
+  }
+
+  @media (min-width: 640px) {
+    .csr-frame {
+      aspect-ratio: 4 / 3;
+      min-height: 0;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .csr-frame {
+      aspect-ratio: 16 / 9;
+    }
+  }
+
+  .csr-frame > img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: sepia(0.3) saturate(0.95) brightness(0.86);
+  }
+
+  .csr-scrim {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--color-ink) 90%, transparent) 0%,
+      color-mix(in srgb, var(--color-ink) 66%, transparent) 45%,
+      color-mix(in srgb, var(--color-ink) 12%, transparent) 82%,
+      transparent 100%
+    );
+  }
+
+  .csr-copy {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: min(44rem, 88%);
+    margin-inline: auto;
+    padding-block: 2.5rem 3rem;
+    text-align: center;
+    color: #ffffff;
+  }
+
+  @media (min-width: 640px) {
+    .csr-copy {
+      position: absolute;
+      inset: 0 0 auto 0;
+      padding-block: clamp(2rem, 4.5vw, 3.75rem) 0;
+    }
+  }
+
+  .csr-kicker {
+    color: rgba(255, 255, 255, 0.7);
+  }
+
+  .csr-foundation {
+    margin-top: 1rem;
+    font-size: var(--text-base);
+    font-weight: 600;
+    color: var(--color-primary-light);
+  }
+
+  .csr-heading {
+    margin-top: 0.5rem;
+    color: #ffffff;
+  }
+
+  .csr-body {
+    margin-top: 1rem;
+    max-width: 46ch;
+    font-size: var(--text-base);
+    line-height: 1.65;
+    color: rgba(255, 255, 255, 0.82);
+  }
+
+  .csr-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: 1.75rem;
+    border-radius: 999px;
+    padding: 0.8rem 1.6rem;
+    background: #ffffff;
+    font-size: var(--text-base);
+    font-weight: 600;
+    color: var(--color-carbon);
+    transition:
+      transform 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+      background-color 0.3s ease;
+  }
+
+  .csr-cta:hover {
+    transform: translateY(-2px);
+    background: var(--color-primary-light);
+  }
+
+  /* --- CTA ----------------------------------------------------------------- */
+
+  /* The closing section: one abstract photograph, blurred past the point of being a
+     picture of anything, graded to solid ink at the bottom so the section and the
+     footer beneath it read as a single dark field with no seam between them.
+
+     This replaced four animated layers (three drifting blurred blobs, a rotating conic
+     sweep, a scrolling hairline grid and an SVG noise plate) that were doing the same
+     job in CSS. A real photograph under a 40px blur gives the colour variation those
+     were faking, costs one image request, and animates nothing.
+
+     Three things are load-bearing:
+       1. The section must have NO bottom padding and the footer must paint
+          `--color-ink-soft`, because `.cta-fade` ends on exactly that colour. Change
+          one and the join becomes a visible band.
+       2. `.cta-photo` is scaled past its box — a blur samples transparent black
+          outside the element, so an unscaled layer feathers to grey at all four edges.
+       3. The noise plate stays. The blur is a gradient by another name and it bands
+          just as visibly on 8-bit displays. */
+  .cta-section {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    background: var(--color-ink);
+  }
+
+  .cta-layer {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+  }
+
+  .cta-photo {
+    overflow: hidden;
+  }
+
+  .cta-photo img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    /* Scaled up so the blur's soft edge is cropped off outside the box. */
+    transform: scale(1.14);
+    filter: blur(40px) saturate(1.15) brightness(0.78);
+  }
+
+  /* Ink washing up from the bottom. Transparent across the top third so the photo is
+     fully itself there, solid `ink-soft` at the very bottom so it hands off to the
+     footer's own background without a step. */
+  .cta-fade {
+    background: linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--color-ink) 10%, transparent) 0%,
+      color-mix(in srgb, var(--color-ink) 45%, transparent) 42%,
+      color-mix(in srgb, var(--color-ink) 88%, transparent) 74%,
+      var(--color-ink-soft) 100%
+    );
+  }
+
+  .cta-noise {
+    opacity: 0.3;
+    mix-blend-mode: overlay;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E");
+  }
+
+  /* --- Footer -------------------------------------------------------------- */
+
+  /* Oversized wordmark bleeding off the bottom edge. Barely there on purpose — it
+     is a texture, and at full contrast it would compete with the contact block. */
+  .footer-watermark {
+    font-size: clamp(8rem, 20vw, 18rem);
+    font-weight: 700;
+    line-height: 0.8;
+    white-space: nowrap;
+    color: rgba(255, 255, 255, 0.05);
+    user-select: none;
+    pointer-events: none;
+  }
 }
 
 @keyframes pulse-ring {
@@ -271,18 +1444,60 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .marquee-track,
   .pulse-ring {
     animation: none;
   }
   .card-lift,
-  .btn-glass-primary {
+  .btn-glass-primary,
+  .link-underline,
+  .site-nav,
+  .nav-wordmark,
+  .nav-logo,
+  .nav-link,
+  .nav-cta,
+  .nav-burger,
+  .menu-panel,
+  .menu-overlay,
+  .menu-item,
+  .unit-tile,
+  .unit-tile-photo,
+  .unit-tile-mark,
+  .unit-tile-panel,
+  .unit-visit,
+  .magang-board-arrow,
+  .magang-cta,
+  .csr-cta {
     transition: none;
   }
   .btn-glass-primary:hover,
   .btn-glass-primary:active {
     transform: none;
   }
+  /* The hover states themselves stay — they are information, not decoration. Only the
+     movement in them is dropped, so the tile still comes up to colour and the panel
+     still opens, they just do it instantly and in place.
+
+     The lift on `.unit-tile-mark` is NOT dropped here: it is what clears the space the
+     panel opens into, so without it the copy would land on top of the lock-up. It
+     survives this block for free — the lift is a `top` change, and the only transform
+     on the mark is the `translate(-50%, -50%)` that centres it, which must stay. */
+  .magang-board-head:hover .magang-board-arrow,
+  .magang-cta:hover,
+  .csr-cta:hover {
+    transform: none;
+  }
+  /* Pinned rather than transitioned: these only ever scale or slide, so with the
+     transition gone the hover would be an instant jump instead of a push-in. */
+  .unit-tile-photo,
+  .unit-tile:hover .unit-tile-photo,
+  .unit-tile:focus-within .unit-tile-photo,
+  .unit-tile-panel,
+  .unit-tile:hover .unit-tile-panel,
+  .unit-tile:focus-within .unit-tile-panel {
+    transform: none;
+  }
+  /* motion.ts skips ScrollSmoother entirely under this preference, so the browser is
+     back in charge of scrolling — and an instant jump is the point. */
   html {
     scroll-behavior: auto;
   }
@@ -291,7 +1506,7 @@
 /* Medium-style reading column for blog article bodies. */
 .prose-article {
   font-family: var(--font-serif);
-  color: #242424;
+  color: var(--color-carbon);
   font-size: 20px;
   line-height: 1.7;
   letter-spacing: -0.003em;
@@ -307,7 +1522,7 @@
   font-weight: 700;
   line-height: 1.25;
   letter-spacing: -0.02em;
-  color: var(--color-primary);
+  color: var(--color-carbon);
   margin-top: 2em;
 }
 
@@ -316,24 +1531,27 @@
   font-size: 1.25em;
   font-weight: 700;
   line-height: 1.3;
-  color: var(--color-primary);
+  color: var(--color-carbon);
   margin-top: 1.8em;
 }
 
+/* Links are black like everything else; the underline is what marks them, and the
+   hover moves the decoration rather than the colour. */
 .prose-article a {
-  color: var(--color-primary);
+  color: var(--color-carbon);
   text-decoration: underline;
+  text-decoration-color: color-mix(in srgb, var(--color-carbon) 40%, transparent);
   text-underline-offset: 3px;
   text-decoration-thickness: 1px;
 }
 
 .prose-article a:hover {
-  color: var(--color-secondary-dark);
+  text-decoration-color: var(--color-carbon);
 }
 
 .prose-article strong {
   font-weight: 700;
-  color: #111827;
+  color: var(--color-carbon);
 }
 
 .prose-article ul,
@@ -361,7 +1579,7 @@
   border-left: 3px solid var(--color-secondary);
   padding-left: 1.2em;
   font-style: italic;
-  color: #4b5563;
+  color: var(--color-carbon-soft);
 }
 
 .prose-article hr {

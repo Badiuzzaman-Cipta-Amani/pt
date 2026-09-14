@@ -22,3 +22,6 @@ pnpm-debug.log*
 
 # jetbrains setting folder
 .idea/
+
+# video masters — sources for the encodes in public/, never shipped
+media/
