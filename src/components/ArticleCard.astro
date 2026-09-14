@@ -1,0 +1,35 @@
+---
+import { formatDate, imageAt, type Article } from "@/lib/articles"
+
+interface Props {
+  article: Article
+  delay?: number
+  /** Show `Category · date` instead of the date alone. */
+  withCategory?: boolean
+  class?: string
+}
+
+const { article, delay = 0, withCategory = false, class: className } = Astro.props
+const { title, excerpt, category, date, image } = article.data
+---
+
+<a
+  href={`/artikel/${article.id}`}
+  class:list={["group", className]}
+  data-reveal
+  data-reveal-delay={delay}
+>
+  <div class="aspect-4/5 overflow-hidden bg-mist">
+    <img
+      src={imageAt(image, 800)}
+      alt=""
+      class="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-110"
+      loading="lazy"
+    />
+  </div>
+  <p class="t-label mt-5">
+    {withCategory && <>{category} · </>}{formatDate(date)}
+  </p>
+  <h3 class="t-card mt-2 group-hover:underline">{title}</h3>
+  <p class="t-body mt-2">{excerpt}</p>
+</a>

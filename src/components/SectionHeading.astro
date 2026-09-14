@@ -1,0 +1,18 @@
+---
+// The `h2` + paragraph split used at the top of most sections.
+
+interface Props {
+  title: string
+  text: string
+  bold?: boolean
+}
+
+const { title, text, bold = true } = Astro.props
+---
+
+<div class="grid gap-12 md:grid-cols-12 md:items-end md:gap-x-6 lg:gap-x-8" data-reveal>
+  <div class="md:col-span-6">
+    <h2 class:list={[bold ? "t-h2-bold" : "t-h2"]}>{title}</h2>
+  </div>
+  <p class="t-body md:col-span-6">{text}</p>
+</div>

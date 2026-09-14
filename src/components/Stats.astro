@@ -1,0 +1,30 @@
+---
+import { stats } from "@/data/site"
+
+// Counters run up from zero when 60% visible — see src/scripts/site.ts.
+// Two columns on phones, evenly spread across the row from md up.
+
+interface Props {
+  items?: typeof stats
+}
+
+const { items = stats } = Astro.props
+---
+
+<div
+  class="site grid grid-cols-2 gap-y-12 py-20 md:flex md:items-start md:justify-between"
+  data-reveal
+>
+  {
+    items.map(({ value, suffix = "", label }) => (
+      <div>
+        <p class="t-stat">
+          <span data-count={value} data-suffix={suffix}>
+            0{suffix}
+          </span>
+        </p>
+        <p class="t-eyebrow mt-4">{label}</p>
+      </div>
+    ))
+  }
+</div>

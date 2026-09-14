@@ -1,0 +1,27 @@
+---
+import type { Cta } from "@/data/site"
+
+interface Props {
+  eyebrow: string
+  heading: string
+  cta: Cta
+  note?: string
+}
+
+const { eyebrow, heading, cta, note } = Astro.props
+---
+
+<section class="bg-sand">
+  <div class="site py-32" data-reveal>
+    <div class="grid items-center gap-12 md:grid-cols-12 md:gap-x-6 lg:gap-x-8">
+      <div class="md:col-span-8">
+        <p class="t-eyebrow">{eyebrow}</p>
+        <h2 class="t-h2 mt-4 max-w-2xl">{heading}</h2>
+      </div>
+      <div class="md:col-span-4 md:text-right">
+        <a href={cta.href} class="btn btn-ink px-8 py-4 text-base">{cta.label}</a>
+        {note && <p class="t-body mt-3 text-sm">{note}</p>}
+      </div>
+    </div>
+  </div>
+</section>

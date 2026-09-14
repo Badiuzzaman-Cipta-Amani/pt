@@ -1,0 +1,34 @@
+---
+import { Image } from "astro:assets"
+import type { Unit } from "@/data/units"
+
+// Mist tile: logo, name, summary, then the actions pinned to the foot.
+// `withProfile` adds the "Lihat profil" button (the /unit-usaha listing).
+
+interface Props {
+  unit: Unit
+  delay?: number
+  withProfile?: boolean
+}
+
+const { unit, delay = 0, withProfile = false } = Astro.props
+const href = `/unit-usaha/${unit.slug}`
+---
+
+<article
+  class="group flex flex-col bg-mist p-8 transition-colors duration-300 hover:bg-[#ececec]"
+  data-reveal
+  data-reveal-delay={delay}
+>
+  <a href={href} class="logo-tile mx-auto h-20 w-28" aria-label={unit.name}>
+    <Image src={unit.logo} alt="" width={224} densities={[1, 2]} />
+  </a>
+  <h3 class="t-card mt-8"><a href={href} class="hover:underline">{unit.name}</a></h3>
+  <p class="t-body mt-3">{unit.summary}</p>
+  <div class="mt-auto flex flex-wrap gap-3 pt-8">
+    {withProfile && <a href={href} class="btn btn-ink">Lihat profil</a>}
+    <a href={unit.website} target="_blank" rel="noopener" class="btn btn-ghost-ink">
+      Kunjungi situs
+    </a>
+  </div>
+</article>

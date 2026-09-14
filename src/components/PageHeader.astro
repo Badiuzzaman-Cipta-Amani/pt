@@ -1,0 +1,37 @@
+---
+// Dark sub-page header. With `image` the photo bleeds down the right 55% on lg
+// and the copy sits over its faded left edge (the Artikel featured post).
+
+interface Props {
+  eyebrow: string
+  title: string
+  lead?: string
+  image?: { src: string; alt: string }
+}
+
+const { eyebrow, title, lead, image } = Astro.props
+---
+
+<section class="relative isolate overflow-hidden bg-ink text-white">
+  {
+    image && (
+      <div class="veil absolute inset-y-0 right-0 hidden w-[55%] overflow-hidden lg:block">
+        <img src={image.src} alt={image.alt} class="hero-img h-full w-full object-cover" />
+        <div class="absolute inset-0 bg-linear-to-r from-ink via-ink/60 to-ink/10" />
+        <div class="absolute inset-0 bg-linear-to-t from-ink via-transparent to-ink/30" />
+      </div>
+    )
+  }
+  <div class="site relative z-10 pt-40 pb-24 lg:pt-52 lg:pb-32">
+    <p class="anim d-1 t-overline">{eyebrow}</p>
+    <h1 class="anim d-2 t-h1 mt-5 max-w-3xl">{title}</h1>
+    {
+      lead && (
+        <p class="anim d-3 mt-8 max-w-2xl text-lg leading-relaxed font-light text-white/75">
+          {lead}
+        </p>
+      )
+    }
+    <slot />
+  </div>
+</section>
