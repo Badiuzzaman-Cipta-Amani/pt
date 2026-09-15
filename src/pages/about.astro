@@ -15,36 +15,16 @@ const pad = (n: number) => String(n).padStart(2, "0")
 
   <!-- ================= VISI KAMI ================= -->
   <section id="visi" class="scroll-mt-20 bg-white">
-    <!-- Sand statement band: the vision as one large pull-statement, the isometric
-         line art kept as a faint watermark behind it -->
+    <!-- Sand statement band: the vision as one large pull-statement beside a
+         photo of the service floor -->
     <div class="relative isolate overflow-hidden bg-sand">
-      <svg
-        class="pointer-events-none absolute inset-y-0 right-0 -z-10 h-full w-full lg:w-[60%]"
-        viewBox="0 0 900 520"
-        preserveAspectRatio="xMidYMid slice"
-        fill="none"
-        stroke="#FFFFFF"
-        stroke-opacity="0.7"
-        stroke-width="1"
-        aria-hidden="true"
-      >
-        <polyline points="700,0 230,270 230,520"></polyline>
-        <polyline points="230,270 470,410 900,150"></polyline>
-        <polyline points="230,430 700,160 900,275"></polyline>
-        <line x1="700" y1="160" x2="700" y2="520"></line>
-        <line x1="700" y1="380" x2="900" y2="500"></line>
-        <line x1="470" y1="410" x2="470" y2="520"></line>
-      </svg>
       <div class="site py-32">
-        <div class="grid gap-12 lg:grid-cols-12 lg:gap-20">
-          <div class="lg:col-span-4" data-reveal>
+        <div class="grid gap-12 lg:grid-cols-12 lg:items-center lg:gap-16">
+          <div class="lg:col-span-7" data-reveal>
             <p class="t-eyebrow">{visi.eyebrow}</p>
             <div class="mt-6 h-px w-16 bg-body/30"></div>
-            <p class="t-body mt-8 max-w-sm">{visi.intro}</p>
-          </div>
-          <div class="lg:col-span-8" data-reveal data-reveal-delay="100">
             <h2
-              class="text-[clamp(1.75rem,1.1rem+2.4vw,3.25rem)] leading-[1.18] font-light tracking-[-0.015em] text-body"
+              class="mt-8 text-[clamp(1.75rem,1.1rem+2.4vw,3.25rem)] leading-[1.18] font-light tracking-[-0.015em] text-body"
             >
               {
                 visi.segments.map(({ text, strong }) =>
@@ -52,6 +32,17 @@ const pad = (n: number) => String(n).padStart(2, "0")
                 )
               }
             </h2>
+            <p class="t-body mt-8 max-w-md">{visi.intro}</p>
+          </div>
+          <div class="lg:col-span-5" data-reveal data-reveal-delay="100">
+            <div class="aspect-4/5 overflow-hidden bg-white sm:aspect-4/3 lg:aspect-4/5">
+              <img
+                src={visi.image.src}
+                alt={visi.image.alt}
+                class="h-full w-full object-cover"
+                loading="lazy"
+              />
+            </div>
           </div>
         </div>
 

@@ -12,7 +12,8 @@ import Layout from "@/layouts/Layout.astro"
 
   <section id="unit-usaha" class="bg-white">
     <div class="site py-32">
-      <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+      <!-- 1 / 2 / 3 per row; four across only from 2xl so 1366px laptops get three -->
+      <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4">
         {units.map((unit, i) => <UnitCard unit={unit} delay={i * 100} withProfile />)}
       </div>
     </div>

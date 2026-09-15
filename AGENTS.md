@@ -31,10 +31,11 @@ width; the formatter also normalises `class` attributes against `src/style/main.
 
 ## What this is
 
-The Amani Group corporate site — a holding company with four subsidiaries. Static Astro 7,
-no adapter, no framework islands, no client-side router. It was ported from a set of
-static HTML mockups (Tailwind Play CDN + AOS); the port's design and plan are under
-`docs/superpowers/`. Copy is Bahasa Indonesia.
+The PT Badiuzzaman Cipta Amani corporate site — a holding company with four
+subsidiaries. Static Astro 7, no adapter, no framework islands, no client-side router. It
+was ported from a set of static HTML mockups (Tailwind Play CDN + AOS) that called the
+company "Amani Group"; the port's design and plan under `docs/superpowers/` still use
+that name. Copy is Bahasa Indonesia.
 
 ### Routes
 
@@ -43,8 +44,8 @@ static HTML mockups (Tailwind Play CDN + AOS); the port's design and plan are un
 | `/`                  | `pages/index.astro`             | hero, visi + stats, misi, unit usaha, testimoni, CSR card, artikel rail, investor CTA |
 | `/about`             | `pages/about.astro`             | header, `#visi`, `#misi`, `#sejarah` (timeline), `#tim`, investor CTA                 |
 | `/unit-usaha`        | `pages/unit-usaha/index.astro`  | header, four `UnitCard`s, kemitraan CTA                                               |
-| `/unit-usaha/[slug]` | `pages/unit-usaha/[slug].astro` | one unit: logo, description, facts, website, socials                                  |
-| `/artikel`           | `pages/artikel/index.astro`     | latest article featured in the header, the rest in a grid                             |
+| `/unit-usaha/[slug]` | `pages/unit-usaha/[slug].astro` | one unit, no dark header (`solidNav`): logo, description, facts, website, socials     |
+| `/artikel`           | `pages/artikel/index.astro`     | plain header; latest article as a wide highlighted card, the rest in a grid           |
 | `/artikel/[slug]`    | `pages/artikel/[slug].astro`    | article body + three related, `Article` JSON-LD                                       |
 | `/contact`           | `pages/contact.astro`           | `mailto:` form + direct channels; `?topic=` preselects the topic                      |
 
@@ -53,14 +54,20 @@ There is deliberately **no investor page**: the mockups had one, it was dropped,
 
 ### Where things live
 
-- **`src/data/site.ts`** — every piece of copy: brand, nav, contact details, socials,
-  footer columns, stats, hero, vision, mission, testimonials, CSR, timeline, team, CTA
-  bands, contact topics, per-page SEO strings. Markup carries no copy; edit here.
+- **`src/data/site.ts`** — every piece of copy: brand (name + the three logo paths), nav
+  (`navLinks` + `navCta`), contact details, socials, footer columns, stats, hero, vision,
+  mission, testimonials, CSR, timeline, team, CTA bands, contact topics, per-page SEO
+  strings. Markup carries no copy; edit here.
+- **Brand logo** — three horizontal lock-ups (2056×762) in `public/`: `logo.png` (gold),
+  `logo-black.png` for white backgrounds, `logo-white.png` for dark ones. `brand.logo`
+  holds the paths; the navbar and footer (both ink) use `light`, the Organization JSON-LD
+  uses `color`. Nothing currently puts the logo on white, so `dark` is unreferenced.
 - **`src/data/units.ts`** — the four units. `logo` is an `import` from
   `src/assets/units/<slug>.png` so it goes through `astro:assets`. That folder holds
   twelve logo pairs (`<slug>.png` colour, `<slug>-black.png` mono); only the four colour
-  ones are referenced. The lock-ups are 3240×4050 with a lot of transparent margin, which
-  is why the mark looks small inside its tile — trim the PNGs, not the CSS.
+  ones are referenced. Every PNG is trimmed to its visible bounds (sharp `trim()`), so a
+  new logo must be trimmed too or it will sit small in its tile — the tile
+  (`logo-tile`) is a fixed box with `object-fit: contain`, so aspect ratios can differ.
 - **`src/content/articles/*.md`** — the articles, a content collection defined in
   `src/content.config.ts` (`title`, `date`, `category`, `excerpt`, `image`). The file
   name is the slug. Adding an article is adding a file; `src/lib/articles.ts` sorts
@@ -86,12 +93,16 @@ There is deliberately **no investor page**: the mockups had one, it was dropped,
 
 One module, imported by the layout, every block guarded on its elements:
 
-- **Navbar** — transparent over a dark header, `is-scrolled` (solid, blurred) past 24px
-  or while the mobile menu is open. `/contact` has no dark header, so it passes
-  `solidNav` to the layout → `SiteNav solid` → `data-solid` on `#navbar`, which keeps the
-  bar solid from the top. Any new page without a dark header must do the same or its
-  white links sit on white. The active link is computed at build from
-  `Astro.url.pathname`.
+- **Navbar** — transparent over a dark header, `is-scrolled` (solid, blurred) past 24px.
+  `/contact` and `/unit-usaha/[slug]` have no dark header, so they pass `solidNav` to the
+  layout → `SiteNav solid` → `data-solid` on `#navbar`, which keeps the bar solid from
+  the top. Any new page without a dark header must do the same or its white links sit on
+  white. The active link is computed at build from `Astro.url.pathname`.
+- **Mobile menu** — `#mobile-menu` is a full-height white drawer (scrim + panel) that
+  slides in from the right on `.is-open`; it sits _after_ the header in `SiteNav`, not
+  inside it, because the solid navbar's `backdrop-filter` would make it the containing
+  block of a fixed child. The script toggles `.is-open`, `inert`, `aria-expanded` and
+  body scroll; the scrim, the close button, any link and Escape all close it.
 - **Reveals** — `data-reveal` starts an element hidden (CSS), an IntersectionObserver
   adds `.is-visible` once; `data-reveal-delay="100"` staggers (ms). Under
   `prefers-reduced-motion` everything is visible at rest.
@@ -111,7 +122,8 @@ the whole design system, imported once by the layout:
 
 - **`@theme`** — `--font-sans` (Outfit Variable); the palette with Tailwind's default
   colours **reset** (`--color-*: initial`) so only `ink body muted line mist sand lime
-flame white black` exist as utilities; `--shadow-card`; the entrance keyframes as
+gold flame white black` exist as utilities (`gold` is the logo colour, `flame` is only
+  the required-field asterisk and form error); `--shadow-card`; the entrance keyframes as
   `--animate-*`. `text-body` is a colour (`#1F1F1F`), `t-body` is a type class — both
   exist, don't confuse them.
 - **`@layer base`** — the viewport scale: `html` font-size is 16px from 360px to 1920px,
@@ -122,15 +134,18 @@ flame white black` exist as utilities; `--shadow-card`; the entrance keyframes a
 - **`@layer components`** — `.site` (the page measure; replaces `mx-auto max-w-site
 px-6` from the mockups), the `t-*` type scale (`t-overline t-h1 t-eyebrow t-label
 t-body t-card t-h2 t-h2-bold t-h3 t-stat`), `btn` + `btn-light/ghost/ghost-ink/
-outline/ink/flame`, `navbar`/`nav-link`, `rail`/`rail-wrap`, `logo-tile`, `grain`,
+outline/ink/gold` (`btn-gold` is the gradient-and-glow CSR button; an `arrow-right` /
+  `arrow-up-right` icon inside any `btn` nudges in its direction on hover), `navbar`/
+  `nav-link`, the `mobile-menu*` drawer states, `rail`/`rail-wrap`, `logo-tile`,
+  `grain`,
   `timeline`/`tl-*`, `field`, `article-body`, the `anim`/`d-*` entrances and the
   `[data-reveal]` states. Utilities win over this layer, which is what lets `t-body
 text-sm` or `btn px-7` work.
 - **Timeline invariant** — on `md+` each `.tl-item` is pulled up `-5rem` into the
   previous entry's row; that only works because every entry carries a `16/10` image of
   the same height. An entry without an image, or a much longer body, breaks the zig-zag.
-- **Reduced motion** block at the end disables reveals and entrances and restores native
-  scrolling. Any new animation belongs there too.
+- **Reduced motion** block at the end disables reveals, entrances and the drawer
+  transitions and restores native scrolling. Any new animation belongs there too.
 
 Tailwind v4 gotchas already hit: it's `bg-linear-to-r` not `bg-gradient-to-r`,
 `aspect-4/5` not `aspect-[4/5]`; and `sharp` must be a direct dependency or
@@ -148,13 +163,12 @@ Tailwind v4 gotchas already hit: it's `bg-linear-to-r` not `bg-gradient-to-r`,
 - `site` in `astro.config.mjs` is `http://localhost:4321` — **change before deploying**;
   canonical, OG and sitemap URLs all come from it.
 - Photography is Unsplash placeholders.
-- `public/logo.png`, `public/logo-black.png`, `public/logo-white.png` and
-  `public/hero.mp4` are unreferenced leftovers; the brand mark is the "A" box from the
-  mockups. `logo-white.png` is the obvious swap-in for the navbar.
+- Contact emails, WhatsApp number and social handles in `site.ts` / `units.ts` still use
+  the old `amanigroup` domain and handles.
+- `public/hero.mp4` is an unreferenced leftover.
 - `legalLinks` in `site.ts` point at `#`.
 - The home rail shows each article's full `excerpt`; the mockup used shorter, rail-only
   blurbs.
-- Unit logos render small because the PNGs carry wide transparent margins.
 
 ## Documentation
 

@@ -6,7 +6,7 @@ excerpt: Tiga manajer dipindahkan antarunit selama dua belas bulan. Berikut hasi
 image: https://images.unsplash.com/photo-1556761175-b413da4baf72?auto=format&fit=crop&w=1600&q=80
 ---
 
-Pada Agustus 2025, Amani Group memulai program rotasi manajemen dengan memindahkan tiga manajer unit ke unit yang berbeda selama dua belas bulan. Program ini dirancang untuk memastikan kompetensi operasional yang terbentuk di satu unit dapat diterapkan di unit lain, sekaligus mengurangi ketergantungan grup pada individu tertentu.
+Pada Agustus 2025, PT Badiuzzaman Cipta Amani memulai program rotasi manajemen dengan memindahkan tiga manajer unit ke unit yang berbeda selama dua belas bulan. Program ini dirancang untuk memastikan kompetensi operasional yang terbentuk di satu unit dapat diterapkan di unit lain, sekaligus mengurangi ketergantungan grup pada individu tertentu.
 
 Evaluasi dilakukan pada tiga aspek: kualitas laporan keuangan unit, ketepatan pelaksanaan prosedur baku, dan tingkat kepuasan pelanggan. Ketiga unit yang menerima manajer rotasi mencatat peningkatan ketepatan pelaporan dari 82% menjadi 96%, tanpa penurunan pada indikator kepuasan pelanggan.
 

@@ -1,6 +1,7 @@
-# Amani Group
+# PT Badiuzzaman Cipta Amani
 
-Corporate site for Amani Group — a holding company with four subsidiaries. Static
+Corporate site for PT Badiuzzaman Cipta Amani — a holding company with four
+subsidiaries. Static
 [Astro 7](https://astro.build) + Tailwind v4, no framework runtime.
 
 ## Commands

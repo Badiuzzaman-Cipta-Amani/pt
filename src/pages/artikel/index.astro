@@ -1,42 +1,18 @@
 ---
+import { ArrowRight } from "@lucide/astro"
 import ArticleCard from "@/components/ArticleCard.astro"
 import PageHeader from "@/components/PageHeader.astro"
-import { artikelIntro, seo } from "@/data/site"
+import { artikelIntro, pageHeaders, seo } from "@/data/site"
 import Layout from "@/layouts/Layout.astro"
 import { formatDate, getArticles, imageAt } from "@/lib/articles"
 
-// The latest article is featured in the header; the grid lists the rest.
+// Plain page header; the latest article is highlighted as a wide card at the
+// top of the list, the rest follow in the grid.
 const [featured, ...rest] = await getArticles()
 ---
 
 <Layout title={seo.artikel.title} description={seo.artikel.description}>
-  {
-    featured && (
-      <PageHeader
-        eyebrow="Artikel · Terbaru"
-        title={featured.data.title}
-        lead={featured.data.excerpt}
-        image={{ src: featured.data.image, alt: featured.data.title }}
-      >
-        <div class="anim d-4 mt-10 flex flex-wrap items-center gap-6">
-          <a href={`/artikel/${featured.id}`} class="btn btn-light px-7 py-3">
-            Baca artikel
-          </a>
-          <p class="text-sm font-light text-white/60">
-            {featured.data.category} · {formatDate(featured.data.date)}
-          </p>
-        </div>
-        <!-- image for screens without the side bleed -->
-        <div class="anim d-4 mt-14 aspect-video overflow-hidden bg-white/5 lg:hidden">
-          <img
-            src={imageAt(featured.data.image, 1000)}
-            alt={featured.data.title}
-            class="h-full w-full object-cover"
-          />
-        </div>
-      </PageHeader>
-    )
-  }
+  <PageHeader {...pageHeaders.artikel} />
 
   <section class="bg-white">
     <div class="site py-32">
@@ -44,6 +20,39 @@ const [featured, ...rest] = await getArticles()
         <h2 class="t-h2-bold">{artikelIntro.listTitle}</h2>
         <p class="t-body max-w-md">{artikelIntro.listIntro}</p>
       </div>
+
+      {
+        featured && (
+          <a
+            href={`/artikel/${featured.id}`}
+            class="group mt-16 grid overflow-hidden bg-mist transition-colors duration-300 hover:bg-[#ececec] lg:grid-cols-12"
+            data-reveal
+          >
+            <div class="aspect-video overflow-hidden lg:col-span-7 lg:aspect-auto lg:min-h-[26rem]">
+              <img
+                src={imageAt(featured.data.image, 1400)}
+                alt=""
+                class="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+              />
+            </div>
+            <div class="flex flex-col p-8 sm:p-10 lg:col-span-5 lg:p-12">
+              <p class="t-label text-body">{artikelIntro.featuredLabel}</p>
+              <h3 class="t-h3 mt-6 group-hover:underline">{featured.data.title}</h3>
+              <p class="t-body mt-4">{featured.data.excerpt}</p>
+              <div class="mt-auto flex flex-wrap items-center justify-between gap-4 pt-10">
+                <p class="t-label">
+                  {featured.data.category} · {formatDate(featured.data.date)}
+                </p>
+                <span class="btn btn-ink px-5 py-2.5 text-sm">
+                  {artikelIntro.readCta}
+                  <ArrowRight class="h-4 w-4 group-hover:translate-x-1" stroke-width={1.5} />
+                </span>
+              </div>
+            </div>
+          </a>
+        )
+      }
+
       <div class="mt-20 grid gap-x-8 gap-y-20 sm:grid-cols-2 lg:grid-cols-3">
         {
           rest.map((article, i) => (

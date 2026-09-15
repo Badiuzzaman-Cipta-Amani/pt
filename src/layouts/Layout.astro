@@ -40,6 +40,7 @@ const canonical = new URL(Astro.url.pathname, Astro.site).href
         "@type": "Organization",
         name: brand.name,
         url: Astro.site?.href,
+        logo: new URL(brand.logo.color, Astro.site).href,
         email: contact.email,
         telephone: contact.phone,
         address: {

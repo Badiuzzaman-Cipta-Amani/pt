@@ -2,7 +2,6 @@
 import { ArrowUpRight, ChevronLeft } from "@lucide/astro"
 import { Image } from "astro:assets"
 import CtaBand from "@/components/CtaBand.astro"
-import PageHeader from "@/components/PageHeader.astro"
 import SocialIcon from "@/components/SocialIcon.astro"
 import { brand, kemitraanCta } from "@/data/site"
 import { units } from "@/data/units"
@@ -13,11 +12,10 @@ export const getStaticPaths = () => units.map((unit) => ({ params: { slug: unit.
 const { unit } = Astro.props
 ---
 
-<Layout title={`${unit.name} — ${brand.name}`} description={unit.summary}>
-  <PageHeader eyebrow="Unit usaha" title={unit.name} lead={unit.summary} />
-
+<!-- No dark header: the page opens straight on the detail, so the navbar is solid. -->
+<Layout title={`${unit.name} — ${brand.name}`} description={unit.summary} solidNav>
   <section id="unit-detail" class="bg-mist">
-    <div class="site py-28 lg:py-32">
+    <div class="site pt-40 pb-28 lg:pt-48 lg:pb-32">
       <a
         href="/unit-usaha"
         class="inline-flex items-center gap-2 text-[0.9375rem] font-light text-muted transition-colors hover:text-body"
@@ -27,12 +25,12 @@ const { unit } = Astro.props
       </a>
 
       <div class="mt-10 grid gap-14 lg:grid-cols-12 lg:items-center lg:gap-20">
-        <!-- Left: logo -->
+        <!-- Left: logo. The tile is the logo-tile itself: a white square whose padding is
+             a share of its width, so the logo keeps the same proportion at every size.
+             Stacked (below lg) the square is capped and centred instead of spanning the row. -->
         <div class="lg:col-span-5" data-reveal>
-          <div class="grid aspect-square w-full place-items-center bg-white p-16 sm:p-24">
-            <div class="logo-tile h-40 w-full sm:h-52">
-              <Image src={unit.logo} alt={`Logo ${unit.name}`} width={640} densities={[1, 2]} />
-            </div>
+          <div class="logo-tile mx-auto aspect-square w-full max-w-md bg-white p-[15%] lg:max-w-none">
+            <Image src={unit.logo} alt={`Logo ${unit.name}`} width={800} densities={[1, 2]} />
           </div>
         </div>
 

@@ -6,33 +6,42 @@ const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").match
 // ---------- Navbar: solid once scrolled past the top ----------
 // Pages without a dark header set data-solid on #navbar to keep it solid always.
 const navbar = document.getElementById("navbar")
-const menuBtn = document.getElementById("menu-btn")
-const mobileMenu = document.getElementById("mobile-menu")
 
 if (navbar) {
   const alwaysSolid = navbar.hasAttribute("data-solid")
-  const menuOpen = () => mobileMenu !== null && !mobileMenu.hidden
   const update = () =>
-    navbar.classList.toggle(
-      "is-scrolled",
-      alwaysSolid || menuOpen() || window.scrollY > 24,
-    )
+    navbar.classList.toggle("is-scrolled", alwaysSolid || window.scrollY > 24)
   update()
   window.addEventListener("scroll", update, { passive: true })
+}
 
-  if (menuBtn && mobileMenu) {
-    menuBtn.addEventListener("click", () => {
-      mobileMenu.hidden = !mobileMenu.hidden
-      menuBtn.setAttribute("aria-expanded", String(!mobileMenu.hidden))
-      update()
-    })
-    for (const link of mobileMenu.querySelectorAll("a")) {
-      link.addEventListener("click", () => {
-        mobileMenu.hidden = true
-        menuBtn.setAttribute("aria-expanded", "false")
-      })
-    }
+// ---------- Mobile menu drawer ----------
+// `.is-open` runs the slide-in (main.css); `inert` keeps the closed drawer out
+// of the tab order, and the page behind it stops scrolling while it is open.
+const menuBtn = document.getElementById("menu-btn")
+const mobileMenu = document.getElementById("mobile-menu")
+
+if (menuBtn && mobileMenu) {
+  const closeBtn = document.getElementById("menu-close")
+  const isOpen = () => mobileMenu.classList.contains("is-open")
+
+  const setOpen = (open: boolean) => {
+    mobileMenu.classList.toggle("is-open", open)
+    if (open) mobileMenu.removeAttribute("inert")
+    else mobileMenu.setAttribute("inert", "")
+    menuBtn.setAttribute("aria-expanded", String(open))
+    document.body.style.overflow = open ? "hidden" : ""
+    ;(open ? closeBtn : menuBtn)?.focus()
   }
+
+  menuBtn.addEventListener("click", () => setOpen(true))
+  closeBtn?.addEventListener("click", () => setOpen(false))
+  for (const el of mobileMenu.querySelectorAll("[data-menu-close], a")) {
+    el.addEventListener("click", () => setOpen(false))
+  }
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && isOpen()) setOpen(false)
+  })
 }
 
 // ---------- Scroll reveals ----------

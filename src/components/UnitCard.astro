@@ -1,9 +1,10 @@
 ---
+import { ArrowRight, ArrowUpRight } from "@lucide/astro"
 import { Image } from "astro:assets"
 import type { Unit } from "@/data/units"
 
 // Mist tile: logo, name, summary, then the actions pinned to the foot.
-// `withProfile` adds the "Lihat profil" button (the /unit-usaha listing).
+// `withProfile` adds the solid "Lihat profil" button (the /unit-usaha listing).
 
 interface Props {
   unit: Unit
@@ -20,15 +21,28 @@ const href = `/unit-usaha/${unit.slug}`
   data-reveal
   data-reveal-delay={delay}
 >
-  <a href={href} class="logo-tile mx-auto h-20 w-28" aria-label={unit.name}>
-    <Image src={unit.logo} alt="" width={224} densities={[1, 2]} />
+  <a href={href} class={`logo-tile mx-auto ${unit.logoClass}`} aria-label={unit.name}>
+    <Image src={unit.logo} alt="" densities={[1, 2]} />
   </a>
   <h3 class="t-card mt-8"><a href={href} class="hover:underline">{unit.name}</a></h3>
   <p class="t-body mt-3">{unit.summary}</p>
-  <div class="mt-auto flex flex-wrap gap-3 pt-8">
-    {withProfile && <a href={href} class="btn btn-ink">Lihat profil</a>}
-    <a href={unit.website} target="_blank" rel="noopener" class="btn btn-ghost-ink">
+  <div class="mt-auto flex flex-wrap items-center gap-3 pt-8">
+    {
+      withProfile && (
+        <a href={href} class="btn btn-ink px-5 py-2.5 text-sm">
+          Lihat profil
+          <ArrowRight class="arrow-right h-4 w-4" stroke-width={1.5} />
+        </a>
+      )
+    }
+    <a
+      href={unit.website}
+      target="_blank"
+      rel="noopener"
+      class="btn btn-ghost-ink px-5 py-2.5 text-sm"
+    >
       Kunjungi situs
+      <ArrowUpRight class="arrow-up-right h-4 w-4" stroke-width={1.5} />
     </a>
   </div>
 </article>

@@ -6,7 +6,7 @@ import Layout from "@/layouts/Layout.astro"
 
 // No dark header: the page opens straight on the form, so the navbar is solid.
 const channels = [
-  { label: "WhatsApp", value: contact.phone, href: contact.whatsapp + "?text=" + encodeURIComponent("Halo Amani Group, saya ingin bertanya mengenai "), icon: "whatsapp" as const },
+  { label: "WhatsApp", value: contact.phone, href: contact.whatsapp + "?text=" + encodeURIComponent("Halo PT Badiuzzaman Cipta Amani, saya ingin bertanya mengenai "), icon: "whatsapp" as const },
   { label: "Instagram", value: contact.instagramHandle, href: contact.instagram, icon: "instagram" as const },
   { label: "Email", value: contact.email, href: `mailto:${contact.email}`, icon: null },
 ]
@@ -135,20 +135,20 @@ const channels = [
 
             <dl class="mt-10 grid gap-6 border-t border-line pt-8 sm:grid-cols-2">
               <div>
-                <dt class="t-label">Kantor pusat</dt>
+                <dt class="t-label font-medium text-body">Kantor pusat</dt>
                 <dd class="t-body mt-2">{contact.address[0]}<br />{contact.address[1]}</dd>
               </div>
               <div>
-                <dt class="t-label">Jam kerja</dt>
+                <dt class="t-label font-medium text-body">Jam kerja</dt>
                 <dd class="t-body mt-2">{contact.hours[0]}<br />{contact.hours[1]}</dd>
               </div>
               <div>
-                <dt class="t-label">Telepon</dt>
+                <dt class="t-label font-medium text-body">WhatsApp</dt>
                 <dd class="t-body mt-2">{contact.phone}</dd>
               </div>
               <div>
-                <dt class="t-label">Relasi investor</dt>
-                <dd class="t-body mt-2">{contact.investorEmail}</dd>
+                <dt class="t-label font-medium text-body">Email</dt>
+                <dd class="t-body mt-2">{contact.email}</dd>
               </div>
             </dl>
           </div>

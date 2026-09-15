@@ -46,9 +46,9 @@ const articles = await getArticles()
     <div class="grain pointer-events-none absolute inset-0 opacity-[0.06] mix-blend-overlay">
     </div>
 
-    <div class="site relative z-10 flex flex-1 flex-col justify-end pt-32 pb-10 lg:pb-12">
+    <div class="site relative z-10 flex flex-1 flex-col justify-end pt-32 pb-20 lg:pb-28">
       <h1
-        class="max-w-3xl text-[13vw] leading-[1.04] font-light tracking-tight sm:text-7xl lg:text-[5.375rem]"
+        class="max-w-3xl text-[13vw] leading-[1.04] font-light tracking-tight sm:text-7xl lg:text-[5rem]"
       >
         {
           hero.lines.map((line, i) => (
@@ -92,29 +92,18 @@ const articles = await getArticles()
         <h2 class="t-h2 mt-8 max-w-[20em]">{visi.statement}</h2>
       </div>
 
-      <!-- Sand panel with isometric line art, bleeding to the right edge -->
+      <!-- Photo panel bleeding to the right edge -->
       <div
         class="relative h-80 overflow-hidden bg-sand lg:col-span-6 lg:h-[32.5rem] 2xl:col-span-7"
         data-reveal
         data-reveal-delay="100"
       >
-        <svg
-          class="absolute inset-0 h-full w-full"
-          viewBox="0 0 900 520"
-          preserveAspectRatio="xMidYMid slice"
-          fill="none"
-          stroke="#FFFFFF"
-          stroke-opacity="0.9"
-          stroke-width="1"
-          aria-hidden="true"
-        >
-          <polyline points="700,0 230,270 230,520"></polyline>
-          <polyline points="230,270 470,410 900,150"></polyline>
-          <polyline points="230,430 700,160 900,275"></polyline>
-          <line x1="700" y1="160" x2="700" y2="520"></line>
-          <line x1="700" y1="380" x2="900" y2="500"></line>
-          <line x1="470" y1="410" x2="470" y2="520"></line>
-        </svg>
+        <img
+          src={visi.image.src}
+          alt={visi.image.alt}
+          class="absolute inset-0 h-full w-full object-cover"
+          loading="lazy"
+        />
       </div>
     </div>
 
@@ -127,7 +116,7 @@ const articles = await getArticles()
   <section id="unit-usaha" class="bg-white">
     <div class="site py-32">
       <SectionHeading title={unitUsahaIntro.title} text={unitUsahaIntro.intro} />
-      <div class="mt-20 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+      <div class="mt-20 grid gap-6 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4">
         {units.map((unit, i) => <UnitCard unit={unit} delay={i * 100} />)}
       </div>
     </div>
@@ -168,9 +157,19 @@ const articles = await getArticles()
         class="relative isolate overflow-hidden rounded-2xl bg-ink px-6 py-24 text-center text-white shadow-card md:py-36"
         data-reveal
       >
-        <!-- network lines background -->
+        <!-- photo, darkened so the white copy stays legible -->
+        <img
+          src={csr.image.src}
+          alt={csr.image.alt}
+          class="absolute inset-0 -z-20 h-full w-full object-cover object-center"
+          loading="lazy"
+        />
+        <div class="absolute inset-0 -z-10 bg-ink/70"></div>
+        <div class="absolute inset-0 -z-10 bg-linear-to-t from-ink/80 via-ink/30 to-ink/60">
+        </div>
+        <!-- network lines overlay -->
         <svg
-          class="absolute inset-0 -z-10 h-full w-full opacity-60"
+          class="absolute inset-0 -z-10 h-full w-full opacity-40"
           viewBox="0 0 1200 520"
           preserveAspectRatio="xMidYMid slice"
           fill="none"
@@ -213,7 +212,7 @@ const articles = await getArticles()
         >
           {csr.body}
         </p>
-        <a href={csr.cta.href} class="btn btn-flame mt-10 px-7">{csr.cta.label}</a>
+        <a href={csr.cta.href} class="btn btn-gold mt-10 px-7">{csr.cta.label}</a>
       </div>
     </div>
   </section>

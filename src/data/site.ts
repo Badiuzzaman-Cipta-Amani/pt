@@ -8,18 +8,22 @@ export interface Cta {
 }
 
 export const brand = {
-  name: "Amani Group",
-  mark: "A",
+  name: "PT Badiuzzaman Cipta Amani",
+  // Horizontal lock-ups in /public: `color` is the gold original, `dark` for
+  // white backgrounds, `light` for the ink navbar / footer.
+  logo: { color: "/logo.png", dark: "/logo-black.png", light: "/logo-white.png" },
   description:
-    "Amani Group mengelola empat unit usaha di tujuh cabang di bawah satu standar tata kelola.",
+    "PT Badiuzzaman Cipta Amani adalah perusahaan holding company yang menaungi empat unit usaha di tujuh cabang di bawah satu standar tata kelola.",
 }
 
 export const navLinks: Cta[] = [
-  { label: "Home", href: "/" },
-  { label: "About Us", href: "/about" },
+  { label: "Beranda", href: "/" },
+  { label: "Tentang Kami", href: "/about" },
   { label: "Unit Usaha", href: "/unit-usaha" },
   { label: "Artikel", href: "/artikel" },
 ]
+
+export const navCta: Cta = { label: "Kontak", href: "/contact" }
 
 export const contact = {
   address: ["Jl. Raya Amani No. 12", "Jakarta Selatan 12560"],
@@ -28,10 +32,10 @@ export const contact = {
   phone: "+62 21 5555 0123",
   whatsapp: "https://wa.me/62215550123",
   whatsappPrefilled:
-    "https://wa.me/62215550123?text=Halo%20Amani%20Group%2C%20saya%20ingin%20bertanya%20mengenai%20",
+    "https://wa.me/62215550123?text=Halo%20PT%20Badiuzzaman%20Cipta%20Amani%2C%20saya%20ingin%20bertanya%20mengenai%20",
   instagramHandle: "@amanigroup",
   instagram: "https://instagram.com/amanigroup",
-  hours: ["Senin – Jumat", "08.00 – 17.00 WIB"],
+  hours: ["Senin – Sabtu", "08.00 – 17.00 WIB"],
 }
 
 export const socials: { label: string; href: string; icon: SocialIconName }[] = [
@@ -64,15 +68,6 @@ export const footerColumns: { title: string; links: Cta[] }[] = [
       { label: "PAT", href: "/unit-usaha/pat" },
     ],
   },
-  {
-    title: "Hubungi",
-    links: [
-      { label: "Relasi investor", href: "/contact?topic=investor" },
-      { label: "Karier", href: "/contact?topic=karier" },
-      { label: "Kemitraan pemasok", href: "/contact?topic=pemasok" },
-      { label: "Media", href: "/contact?topic=media" },
-    ],
-  },
 ]
 
 export const legalLinks: Cta[] = [
@@ -88,18 +83,24 @@ export const stats: { value: number; suffix?: string; label: string }[] = [
 ]
 
 export const hero = {
-  lines: ["Tata Kelola Disiplin,", "Pertumbuhan yang", "Terukur"],
-  label: "Grup usaha",
+  lines: ["Membangun Bisnis,", "Menciptakan Peluang"],
+  label: "Holding company",
   description:
-    "Amani Group mengelola empat unit usaha di tujuh cabang di bawah satu standar tata kelola. Setiap unit dijalankan dengan disiplin keuangan, pengawasan internal, dan target pertumbuhan yang terukur.",
+    "PT Badiuzzaman Cipta Amani adalah perusahaan holding company yang menaungi empat unit usaha di tujuh cabang: jasa laundry, perawatan karpet, kedai kopi, dan pengadaan teknik. Setiap unit dijalankan di bawah satu standar tata kelola, dengan disiplin keuangan dan pertumbuhan yang dibiayai oleh kinerja.",
+  // A modest four-storey office block — a growing company, not a corporate tower.
   image:
-    "https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?q=80&w=1800&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1659384897789-392e674bde56?q=80&w=1800&auto=format&fit=crop",
   primary: { label: "Lihat Unit Usaha", href: "/unit-usaha" } satisfies Cta,
-  secondary: { label: "Tentang Amani Group", href: "/about" } satisfies Cta,
+  secondary: { label: "Tentang Kami", href: "/about" } satisfies Cta,
 }
 
 export const visi = {
   eyebrow: "Visi kami",
+  // Front-line service: a cashier serving a customer at the counter.
+  image: {
+    src: "https://images.unsplash.com/photo-1556740738-b6a63e27c4df?q=80&w=1400&auto=format&fit=crop",
+    alt: "Kasir melayani pelanggan di meja kasir",
+  },
   statement:
     "Menjadi perusahaan induk yang menghadirkan manfaat nyata melalui layanan berstandar tinggi, serta berkontribusi secara berkelanjutan terhadap penguatan perekonomian masyarakat.",
   // The about page sets two phrases in a heavier weight.
@@ -131,31 +132,35 @@ export const visi = {
 export const misi = {
   title: "Misi Kami",
   intro:
-    "Empat komitmen yang menjadi kerangka kerja seluruh unit usaha Amani Group. Setiap komitmen diterjemahkan menjadi prosedur baku, diukur secara berkala, dan menjadi dasar pengambilan keputusan manajemen.",
+    "Empat komitmen yang menjadi kerangka kerja seluruh unit usaha PT Badiuzzaman Cipta Amani. Setiap komitmen diterjemahkan menjadi prosedur baku, diukur secara berkala, dan menjadi dasar pengambilan keputusan manajemen.",
   items: [
     {
       title: "Permodalan bertahap",
       body: "Pendanaan disalurkan secara bertahap berdasarkan capaian kinerja. Setiap unit memperoleh modal sesuai kemampuannya menghasilkan pendapatan yang terverifikasi.",
+      // hand stacking coins one column at a time
       image:
-        "https://images.unsplash.com/photo-1579621970563-ebec7560ff3e?auto=format&fit=crop&w=800&q=80",
+        "https://images.unsplash.com/photo-1633158829585-23ba8f7c8caf?auto=format&fit=crop&w=800&q=80",
     },
     {
       title: "Satu standar tata kelola",
       body: "Standar pelaporan keuangan, audit internal, dan kepatuhan yang seragam diterapkan tanpa pengecualian di seluruh unit dan cabang.",
+      // two people reviewing and signing documents
       image:
-        "https://images.unsplash.com/photo-1450101499163-c8848c66ca85?auto=format&fit=crop&w=800&q=80",
+        "https://images.unsplash.com/photo-1562564055-71e051d33c19?auto=format&fit=crop&w=800&q=80",
     },
     {
       title: "Pengembangan talenta lintas unit",
       body: "Program rotasi manajemen yang terstruktur memastikan kompetensi yang terbentuk di satu unit menjadi aset seluruh grup.",
+      // a manager coaching a colleague at their desk
       image:
-        "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=800&q=80",
+        "https://images.unsplash.com/photo-1531539427495-97c44a449837?auto=format&fit=crop&w=800&q=80",
     },
     {
       title: "Sinergi rantai pasok",
       body: "Kebutuhan pengadaan, logistik, dan bahan baku dipenuhi secara internal antarunit, sehingga nilai tambah tetap berada di dalam grup.",
+      // warehouse workers handing a parcel between them
       image:
-        "https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?auto=format&fit=crop&w=800&q=80",
+        "https://images.unsplash.com/photo-1573207535342-8c0f9506112e?auto=format&fit=crop&w=800&q=80",
     },
   ],
 }
@@ -163,13 +168,13 @@ export const misi = {
 export const unitUsahaIntro = {
   title: "Unit Usaha",
   intro:
-    "Amani Group menaungi empat unit usaha yang beroperasi di tujuh cabang. Setiap unit menjalankan model bisnisnya masing-masing di bawah standar tata kelola, pengelolaan talenta, dan rantai pasok yang sama.",
+    "PT Badiuzzaman Cipta Amani menaungi empat unit usaha yang beroperasi di tujuh cabang. Setiap unit menjalankan model bisnisnya masing-masing di bawah standar tata kelola, pengelolaan talenta, dan rantai pasok yang sama.",
 }
 
 export const testimonials = {
   title: "Testimoni Klien",
   intro:
-    "Penilaian dari klien yang menggunakan lebih dari satu layanan Amani Group. Satu kontrak, satu narahubung, dan standar pelayanan yang sama di seluruh unit usaha.",
+    "Penilaian dari klien yang menggunakan lebih dari satu layanan PT Badiuzzaman Cipta Amani. Satu kontrak, satu narahubung, dan standar pelayanan yang sama di seluruh unit usaha.",
   items: [
     {
       quote:
@@ -197,7 +202,13 @@ export const testimonials = {
 
 export const csr = {
   title: "Tumbuh Bersama Masyarakat",
-  body: "Program tanggung jawab sosial Amani Group dijalankan di setiap cabang: pelatihan kerja bagi warga sekitar, kemitraan dengan pemasok lokal, dan dukungan pendidikan bagi keluarga karyawan. Dampak setiap program diukur dan dilaporkan secara berkala.",
+  body: "Program tanggung jawab sosial PT Badiuzzaman Cipta Amani dijalankan di setiap cabang: pelatihan kerja bagi warga sekitar, kemitraan dengan pemasok lokal, dan dukungan pendidikan bagi keluarga karyawan. Dampak setiap program diukur dan dilaporkan secara berkala.",
+  // Background of the CSR card: a volunteer handing a meal to an elderly man on
+  // an Indonesian street.
+  image: {
+    src: "https://images.unsplash.com/photo-1714194822208-af85b88ffb80?q=80&w=1800&auto=format&fit=crop",
+    alt: "Relawan menyerahkan bantuan kepada warga",
+  },
   cta: { label: "Lihat Program CSR", href: "/contact?topic=csr" } satisfies Cta,
 }
 
@@ -207,23 +218,27 @@ export const artikelIntro = {
     "Catatan manajemen mengenai pengelolaan unit usaha, pembentukan tim, dan pembelajaran dari setiap cabang yang dibuka.",
   cta: { label: "Semua Artikel", href: "/artikel" } satisfies Cta,
   listTitle: "Seluruh artikel",
+  featuredLabel: "Artikel terbaru",
+  readCta: "Baca artikel",
   listIntro:
     "Catatan keputusan, evaluasi program, dan pembelajaran manajemen dari pengelolaan empat unit usaha di tujuh cabang.",
-  author: "Manajemen Amani Group",
+  author: "Manajemen PT Badiuzzaman Cipta Amani",
 }
 
+// There is no investor page: the CTA sends enquiries to the contact form with
+// the investor topic preselected, so the copy asks the reader to get in touch.
 export const investorCta = {
-  eyebrow: "Investor",
+  eyebrow: "Relasi investor",
   heading:
-    "Amani Group membuka kesempatan bagi investor yang mengutamakan pertumbuhan bertahap, tata kelola yang jelas, dan pelaporan yang transparan.",
-  cta: { label: "Informasi Investor", href: "/contact?topic=investor" } satisfies Cta,
-  note: "Tanggapan diberikan dalam 2 hari kerja.",
+    "Tertarik berinvestasi bersama PT Badiuzzaman Cipta Amani? Hubungi kami untuk memperoleh profil perusahaan, laporan kinerja, dan skema kemitraan investasi.",
+  cta: { label: "Hubungi Kami", href: "/contact?topic=investor" } satisfies Cta,
+  note: "",
 }
 
 export const kemitraanCta = {
   eyebrow: "Kemitraan",
   heading:
-    "Membutuhkan lebih dari satu layanan? Amani Group menyediakan satu kontrak dan satu narahubung untuk seluruh unit usaha.",
+    "Membutuhkan lebih dari satu layanan? PT Badiuzzaman Cipta Amani menyediakan satu kontrak dan satu narahubung untuk seluruh unit usaha.",
   cta: { label: "Hubungi Kami", href: "/contact?topic=kemitraan" } satisfies Cta,
   note: "Tanggapan diberikan dalam 2 hari kerja.",
 }
@@ -267,11 +282,11 @@ export const timeline = {
     },
     {
       year: "2022",
-      title: "Pembentukan Amani Group",
+      title: "Pembentukan PT Badiuzzaman Cipta Amani",
       body: "Ketiga unit dikonsolidasikan di bawah satu perusahaan induk. Satu standar tata kelola, bagan akun, dan mekanisme audit internal diberlakukan untuk seluruh unit.",
       image:
         "https://images.unsplash.com/photo-1497215728101-856f4ea42174?auto=format&fit=crop&w=800&q=80",
-      alt: "Kantor pusat Amani Group",
+      alt: "Kantor pusat PT Badiuzzaman Cipta Amani",
     },
     {
       year: "2023",
@@ -303,7 +318,7 @@ export const timeline = {
 export const team = {
   title: "Tim Manajemen",
   intro:
-    "Direksi Amani Group bertanggung jawab atas penetapan standar, pengawasan kinerja unit, dan pengambilan keputusan alokasi modal.",
+    "Direksi PT Badiuzzaman Cipta Amani bertanggung jawab atas penetapan standar, pengawasan kinerja unit, dan pengambilan keputusan alokasi modal.",
   members: [
     {
       name: "Ahmad Fauzi",
@@ -340,12 +355,17 @@ export const pageHeaders = {
   about: {
     eyebrow: "Tentang kami",
     title: "Perusahaan induk dengan disiplin tata kelola sebagai fondasi.",
-    lead: "Amani Group didirikan untuk menaungi unit-unit usaha yang tumbuh dari satu standar yang sama: keuangan yang tertib, pengawasan internal yang konsisten, dan pertumbuhan yang dibiayai oleh kinerja, bukan oleh utang.",
+    lead: "PT Badiuzzaman Cipta Amani didirikan untuk menaungi unit-unit usaha yang tumbuh dari satu standar yang sama: keuangan yang tertib, pengawasan internal yang konsisten, dan pertumbuhan yang dibiayai oleh kinerja, bukan oleh utang.",
   },
   unitUsaha: {
-    eyebrow: "Amani Group",
+    eyebrow: "PT Badiuzzaman Cipta Amani",
     title: "Unit Usaha",
     lead: unitUsahaIntro.intro,
+  },
+  artikel: {
+    eyebrow: "PT Badiuzzaman Cipta Amani",
+    title: "Artikel",
+    lead: artikelIntro.intro,
   },
 }
 
@@ -373,26 +393,27 @@ export const contactPage = {
 
 export const seo = {
   home: {
-    title: "Amani Group — Tata Kelola Disiplin, Pertumbuhan Terukur",
+    title: "PT Badiuzzaman Cipta Amani — Membangun Bisnis, Menciptakan Peluang",
     description: brand.description,
   },
   about: {
-    title: "Tentang Kami — Amani Group",
+    title: "Tentang Kami — PT Badiuzzaman Cipta Amani",
     description:
-      "Amani Group adalah perusahaan induk dengan disiplin tata kelola sebagai fondasi: visi, misi, perjalanan perusahaan, dan tim manajemen.",
+      "PT Badiuzzaman Cipta Amani adalah perusahaan induk dengan disiplin tata kelola sebagai fondasi: visi, misi, perjalanan perusahaan, dan tim manajemen.",
   },
   unitUsaha: {
-    title: "Unit Usaha — Amani Group",
+    title: "Unit Usaha — PT Badiuzzaman Cipta Amani",
     description:
-      "Empat unit usaha Amani Group: Amani Laundry, Amani Karpet, Warkop Amani, dan PAT.",
+      "Empat unit usaha PT Badiuzzaman Cipta Amani: Amani Laundry, Amani Karpet, Warkop Amani, dan PAT.",
   },
   artikel: {
-    title: "Artikel — Amani Group",
+    title: "Artikel — PT Badiuzzaman Cipta Amani",
     description:
-      "Catatan manajemen Amani Group mengenai tata kelola, keuangan, talenta, dan rantai pasok.",
+      "Catatan manajemen PT Badiuzzaman Cipta Amani mengenai tata kelola, keuangan, talenta, dan rantai pasok.",
   },
   contact: {
-    title: "Hubungi Kami — Amani Group",
-    description: "Hubungi Amani Group melalui formulir email, WhatsApp, atau Instagram.",
+    title: "Hubungi Kami — PT Badiuzzaman Cipta Amani",
+    description:
+      "Hubungi PT Badiuzzaman Cipta Amani melalui formulir email, WhatsApp, atau Instagram.",
   },
 }

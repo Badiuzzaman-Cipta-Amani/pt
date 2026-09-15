@@ -1,7 +1,7 @@
 @import "tailwindcss";
 
 /* ==========================================================================
-   Amani Group — design system. Tailwind v4 is CSS-first: this file IS the
+   PT Badiuzzaman Cipta Amani — design system. Tailwind v4 is CSS-first: this file IS the
    theme. Tokens in @theme become utilities (bg-ink, text-muted, shadow-card…);
    the reusable classes live in @layer components so any utility on the same
    element wins (`t-body text-sm`, `btn px-7`).
@@ -22,7 +22,8 @@
   --color-mist: #f4f4f4; /* light-grey section & card backgrounds */
   --color-sand: #e6ddd2; /* beige vision / CTA panels */
   --color-lime: #a3d65c; /* small square accents, focus ring */
-  --color-flame: #f4511e; /* orange CTA, required-field asterisk */
+  --color-gold: #d4aa6a; /* brand gold from the logo: the CSR button */
+  --color-flame: #f4511e; /* required-field asterisk, form error */
 
   --shadow-card: 0 24px 60px -30px rgb(0 0 0 / 0.45);
 
@@ -232,6 +233,7 @@
       background-color 0.3s ease,
       color 0.3s ease,
       border-color 0.3s ease,
+      box-shadow 0.3s ease,
       transform 0.3s ease;
   }
   .btn-light {
@@ -280,14 +282,32 @@
   .btn-ink:hover {
     background: var(--color-black);
   }
-  .btn-flame {
-    background: var(--color-flame);
-    color: var(--color-white);
-    border: 1px solid var(--color-flame);
-    box-shadow: 0 10px 30px -10px rgb(244 81 30 / 0.8);
+  /* Brand-gold gradient with a soft glow; sits on the dark CSR card. */
+  .btn-gold {
+    background: linear-gradient(135deg, #ecd3a4 0%, var(--color-gold) 48%, #b8894a 100%);
+    color: var(--color-ink);
+    border: 1px solid rgb(236 211 164 / 0.6);
+    box-shadow:
+      0 0 0 1px rgb(212 170 106 / 0.25),
+      0 12px 32px -10px rgb(212 170 106 / 0.85),
+      0 0 28px rgb(212 170 106 / 0.35);
   }
-  .btn-flame:hover {
-    background: #e2440f;
+  .btn-gold:hover {
+    transform: translateY(-1px);
+    box-shadow:
+      0 0 0 1px rgb(212 170 106 / 0.35),
+      0 16px 36px -10px rgb(212 170 106 / 0.95),
+      0 0 40px rgb(212 170 106 / 0.5);
+  }
+  /* Arrow icons inside a button nudge in their direction on hover. */
+  .btn svg {
+    transition: transform 0.3s var(--ease-out-soft);
+  }
+  .btn:hover .arrow-right {
+    transform: translateX(0.25rem);
+  }
+  .btn:hover .arrow-up-right {
+    transform: translate(0.2rem, -0.2rem);
   }
 
   /* ---------- Navbar ---------- */
@@ -330,6 +350,52 @@
     transform-origin: left;
   }
 
+  /* ---------- Mobile menu drawer ---------- */
+  /* Hidden at rest; `.is-open` fades the scrim in and slides the panel in from
+     the right. Visibility flips after the close transition so the panel is
+     still visible while sliding out. */
+  .mobile-menu {
+    visibility: hidden;
+    transition: visibility 0s linear 0.45s;
+  }
+  .mobile-menu.is-open {
+    visibility: visible;
+    transition-delay: 0s;
+  }
+  .mobile-menu-scrim {
+    opacity: 0;
+    transition: opacity 0.45s ease;
+  }
+  .mobile-menu-panel {
+    transform: translateX(100%);
+    transition: transform 0.45s var(--ease-out-soft);
+  }
+  .mobile-menu.is-open .mobile-menu-scrim {
+    opacity: 1;
+  }
+  .mobile-menu.is-open .mobile-menu-panel {
+    transform: none;
+  }
+  /* Panel content fades up in sequence once the panel is in; `--i` is the
+     item's place in the sequence and `mm-foot` adds a pause before the groups
+     at the foot start. No delay on close, so it clears at once. */
+  .mm-item {
+    --mm-pause: 0s;
+    opacity: 0;
+    transform: translateY(1rem);
+    transition:
+      opacity 0.4s ease,
+      transform 0.5s var(--ease-out-soft);
+  }
+  .mm-foot {
+    --mm-pause: 0.35s;
+  }
+  .mobile-menu.is-open .mm-item {
+    opacity: 1;
+    transform: none;
+    transition-delay: calc(0.2s + var(--mm-pause) + var(--i, 0) * 55ms);
+  }
+
   /* ---------- Horizontal article rail ---------- */
   /* Hidden scrollbar; bleeds to the right edge of the viewport from md up. */
   .rail {
@@ -355,8 +421,9 @@
     padding-left: calc(var(--gutter) + 1.5rem);
   }
 
-  /* Unit-usaha logo tile: the PNG lock-ups have mixed aspect ratios, so the
-     tile is a fixed box and the image fits inside it. */
+  /* Unit-usaha logo tile: the lock-ups are trimmed to their visible bounds but
+     have mixed aspect ratios, so the tile is a fixed box and the image fits
+     inside it. */
   .logo-tile {
     display: grid;
     place-items: center;
@@ -576,6 +643,16 @@
   .hero-img,
   .veil {
     animation: none !important;
+    opacity: 1;
+    transform: none;
+  }
+  .mobile-menu,
+  .mobile-menu-scrim,
+  .mobile-menu-panel,
+  .mm-item {
+    transition: none !important;
+  }
+  .mm-item {
     opacity: 1;
     transform: none;
   }

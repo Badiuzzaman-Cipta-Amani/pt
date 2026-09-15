@@ -1,10 +1,16 @@
 ---
-import { Menu } from "@lucide/astro"
-import { brand, navLinks } from "@/data/site"
+import { Mail, Menu, X } from "@lucide/astro"
+import SocialIcon from "@/components/SocialIcon.astro"
+import { brand, contact, navCta, navLinks, socials } from "@/data/site"
 
 // Fixed bar. Transparent over a dark header, solid (`is-scrolled`) once the page
-// scrolls or the mobile menu opens — see src/scripts/site.ts. Pages without a
-// dark header pass `solid` so the white links never sit on a white page.
+// scrolls — see src/scripts/site.ts. Pages without a dark header pass `solid` so
+// the white links never sit on a white page.
+//
+// The mobile menu is a full-height white drawer that slides in from the right
+// over a scrim (`#mobile-menu`, `.is-open`). It is a sibling of the header, not
+// a child: the solid navbar's backdrop-filter would otherwise become the
+// containing block of a fixed descendant.
 
 interface Props {
   solid?: boolean
@@ -15,6 +21,9 @@ const path = Astro.url.pathname.replace(/\/$/, "") || "/"
 const isActive = (href: string) => (href === "/" ? path === "/" : path.startsWith(href))
 const linkClass =
   "nav-link text-[0.9375rem] font-light tracking-wide text-white/80 transition-colors hover:text-white"
+const mobileLinks = [...navLinks, navCta]
+// stagger index of the first foot group: after the heading (0) and the links
+const footStart = mobileLinks.length + 1
 ---
 
 <header
@@ -23,13 +32,8 @@ const linkClass =
   data-solid={solid || undefined}
 >
   <div class="site flex items-center justify-between py-5">
-    <a href="/" class="flex items-center gap-2.5 text-white">
-      <span
-        class="grid h-7 w-7 place-items-center rounded-[0.1875rem] border border-white/70 text-xs font-semibold"
-      >
-        {brand.mark}
-      </span>
-      <span class="text-lg font-light tracking-wide">{brand.name}</span>
+    <a href="/" aria-label={brand.name}>
+      <img src={brand.logo.light} alt={brand.name} class="h-16 w-auto" width="2056" height="762" />
     </a>
 
     <nav class="hidden items-center gap-10 whitespace-nowrap lg:flex" aria-label="Utama">
@@ -47,29 +51,96 @@ const linkClass =
     </nav>
 
     <div class="flex items-center gap-3">
-      <a href="/contact" class="btn btn-ghost hidden py-2.5 lg:inline-flex">Contact</a>
+      <a href={navCta.href} class="btn btn-ghost hidden py-2.5 lg:inline-flex">{navCta.label}</a>
       <button
         id="menu-btn"
         type="button"
-        class="grid h-10 w-10 place-items-center rounded text-white lg:hidden"
+        class="-mr-2 grid h-10 w-10 place-items-center rounded text-white lg:hidden"
         aria-label="Buka menu"
         aria-expanded="false"
         aria-controls="mobile-menu"
       >
-        <Menu class="h-[1.375rem] w-[1.375rem]" stroke-width={1.5} />
+        <Menu class="h-5.5 w-5.5" stroke-width={1.5} />
       </button>
     </div>
   </div>
+</header>
 
-  <div id="mobile-menu" class="border-t border-white/10 bg-ink px-6 py-4 lg:hidden" hidden>
-    <nav class="flex flex-col gap-3" aria-label="Utama (mobile)">
+<div id="mobile-menu" class="mobile-menu fixed inset-0 z-60 lg:hidden" inert>
+  <div class="mobile-menu-scrim absolute inset-0 bg-ink/60" data-menu-close></div>
+  <div
+    class="mobile-menu-panel absolute inset-y-0 right-0 flex w-full max-w-md flex-col overflow-y-auto bg-white px-6 pt-4 pb-10 text-body sm:px-8"
+    role="dialog"
+    aria-modal="true"
+    aria-label="Menu"
+  >
+    <div class="flex justify-end">
+      <button
+        id="menu-close"
+        type="button"
+        class="-mr-2 grid h-10 w-10 place-items-center rounded text-body"
+        aria-label="Tutup menu"
+      >
+        <X class="h-5 w-5" stroke-width={1.5} />
+      </button>
+    </div>
+
+    <!-- `mm-item` + `--i` stagger the fade-up once the panel is open (main.css):
+         the heading, then each link, then the three groups at the foot. -->
+    <p class="mm-item mt-2 text-2xl font-medium tracking-tight text-body" style="--i: 0">
+      Menu
+    </p>
+    <nav class="mt-4 flex flex-col" aria-label="Utama (mobile)">
       {
-        [...navLinks, { label: "Contact", href: "/contact" }].map(({ label, href }) => (
-          <a href={href} class="text-base text-white/85">
+        mobileLinks.map(({ label, href }, i) => (
+          <a
+            href={href}
+            class:list={[
+              "mm-item py-1.5 text-xl leading-tight font-light hover:text-black",
+              isActive(href) ? "text-body" : "text-body/75",
+            ]}
+            style={`--i: ${i + 1}`}
+            aria-current={isActive(href) ? "page" : undefined}
+          >
             {label}
           </a>
         ))
       }
     </nav>
+
+    <div class="mt-auto grid gap-6 pt-16 text-[0.9375rem]">
+      <div class="mm-item mm-foot" style={`--i: ${footStart}`}>
+        <p class="t-label">Media sosial</p>
+        <div class="mt-2.5 flex gap-2">
+          {
+            socials.map(({ label, href, icon }) => (
+              <a
+                href={href}
+                target="_blank"
+                rel="noopener"
+                aria-label={label}
+                class="grid h-10 w-10 place-items-center rounded-full border border-line text-body transition-colors hover:border-body"
+              >
+                <SocialIcon name={icon} class="h-4.5 w-4.5" />
+              </a>
+            ))
+          }
+        </div>
+      </div>
+      <div class="mm-item mm-foot" style={`--i: ${footStart + 1}`}>
+        <p class="t-label">Kantor pusat</p>
+        <p class="mt-1.5">{contact.address[0]}<br />{contact.address[1]}</p>
+      </div>
+      <div class="mm-item mm-foot" style={`--i: ${footStart + 2}`}>
+        <p class="t-label">Hubungi kami</p>
+        <a
+          href={`mailto:${contact.email}`}
+          class="mt-1.5 inline-flex items-center gap-2 hover:underline"
+        >
+          <Mail class="h-4 w-4" stroke-width={1.5} />
+          {contact.email}
+        </a>
+      </div>
+    </div>
   </div>
-</header>
+</div>
