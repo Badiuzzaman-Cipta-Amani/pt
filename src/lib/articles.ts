@@ -2,10 +2,17 @@ import { getCollection, type CollectionEntry } from "astro:content"
 
 export type Article = CollectionEntry<"articles">
 
-/** All articles, newest first. The first one is the featured article. */
+/**
+ * All articles: those marked `featured` first, then newest first. The first one is
+ * the highlighted article on `/artikel` and leads the home rail.
+ */
 export async function getArticles(): Promise<Article[]> {
   const all = await getCollection("articles")
-  return all.sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
+  return all.sort(
+    (a, b) =>
+      Number(b.data.featured) - Number(a.data.featured) ||
+      b.data.date.valueOf() - a.data.date.valueOf(),
+  )
 }
 
 // Dates are stored as calendar days; format in UTC so the day never shifts.

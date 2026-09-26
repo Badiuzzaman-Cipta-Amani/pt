@@ -26,32 +26,31 @@ export const navLinks: Cta[] = [
 export const navCta: Cta = { label: "Kontak", href: "/contact" }
 
 export const contact = {
-  address: ["Jl. Raya Amani No. 12", "Jakarta Selatan 12560"],
-  email: "halo@amanigroup.co.id",
-  investorEmail: "investor@amanigroup.co.id",
-  phone: "+62 21 5555 0123",
-  whatsapp: "https://wa.me/62215550123",
+  address: ["Ruko Bumi Asri Jl. Cikiray Kidul No.A6, Sukamanah, Kec. Cisaat, Kabupaten Sukabumi", "Jawa Barat 43152"],
+  email: "badiuzzamanentrepreneur@gmail.com",
+  investorEmail: "admin@badiuzzaman.com",
+  phone: "+62 851 7826 1908",
+  whatsapp: "https://wa.me/6285178261908",
   whatsappPrefilled:
-    "https://wa.me/62215550123?text=Halo%20PT%20Badiuzzaman%20Cipta%20Amani%2C%20saya%20ingin%20bertanya%20mengenai%20",
-  instagramHandle: "@amanigroup",
-  instagram: "https://instagram.com/amanigroup",
-  hours: ["Senin – Sabtu", "08.00 – 17.00 WIB"],
+    "https://wa.me/6285178261908?text=Halo%20PT%20Badiuzzaman%2C%20saya%20ingin%20bertanya%20mengenai%20",
+  instagramHandle: "@badiuzzamanentrepreneur",
+  instagram: "https://instagram.com/badiuzzamanentrepreneur",
+  hours: ["Senin – Jumat", "08.00 – 17.00 WIB"],
 }
 
 export const socials: { label: string; href: string; icon: SocialIconName }[] = [
-  { label: "Instagram", href: "https://instagram.com/amanigroup", icon: "instagram" },
-  {
-    label: "LinkedIn",
-    href: "https://linkedin.com/company/amanigroup",
-    icon: "linkedin",
-  },
-  { label: "YouTube", href: "https://youtube.com/@amanigroup", icon: "youtube" },
-  { label: "WhatsApp", href: "https://wa.me/62215550123", icon: "whatsapp" },
+  { label: "Instagram", href: "https://instagram.com/badiuzzamanentrepreneur", icon: "instagram" },
+  // {
+  //   label: "LinkedIn",
+  //   href: "https://linkedin.com/company/amanigroup",
+  //   icon: "linkedin",
+  // },
+  { label: "WhatsApp", href: "https://wa.me/6285178261908", icon: "whatsapp" },
 ]
 
 export const footerColumns: { title: string; links: Cta[] }[] = [
   {
-    title: "Perusahaan",
+    title: "Menu",
     links: [
       { label: "Tentang kami", href: "/about" },
       { label: "Visi & misi", href: "/about#misi" },
@@ -78,7 +77,6 @@ export const legalLinks: Cta[] = [
 export const stats: { value: number; suffix?: string; label: string }[] = [
   { value: 4, label: "Unit usaha aktif" },
   { value: 7, label: "Cabang beroperasi" },
-  { value: 50, suffix: " M", label: "Nilai aset dikelola" },
   { value: 5000, label: "Pelanggan dilayani" },
 ]
 
@@ -86,7 +84,7 @@ export const hero = {
   lines: ["Membangun Bisnis,", "Menciptakan Peluang"],
   label: "Holding company",
   description:
-    "PT Badiuzzaman Cipta Amani adalah perusahaan holding company yang menaungi empat unit usaha di tujuh cabang: jasa laundry, perawatan karpet, kedai kopi, dan pengadaan teknik. Setiap unit dijalankan di bawah satu standar tata kelola, dengan disiplin keuangan dan pertumbuhan yang dibiayai oleh kinerja.",
+    "PT Badiuzzaman Cipta Amani adalah perusahaan holding company yang menaungi empat unit usaha di tujuh cabang: jasa laundry, perawatan karpet, kedai kopi, dan jasa sumur bor. Setiap unit dijalankan di bawah satu standar tata kelola, dengan disiplin keuangan dan pertumbuhan yang dibiayai oleh kinerja.",
   // A modest four-storey office block — a growing company, not a corporate tower.
   image:
     "https://images.unsplash.com/photo-1659384897789-392e674bde56?q=80&w=1800&auto=format&fit=crop",
@@ -185,7 +183,7 @@ export const testimonials = {
     },
     {
       quote:
-        "Kami menggunakan Amani Karpet untuk perawatan karpet masjid dan PAT untuk pengadaan perlengkapan rutin. Administrasi tertib, harga transparan, dan setiap pekerjaan didokumentasikan dengan berita acara.",
+        "Kami menggunakan Amani Karpet untuk perawatan karpet masjid dan PAT untuk pembuatan sumur bor. Administrasi tertib, harga transparan, dan setiap pekerjaan didokumentasikan dengan berita acara.",
       name: "Ir. Budi Santoso",
       role: "Ketua Takmir, Masjid Al-Ikhlas",
       units: ["Amani Karpet", "PAT"],
@@ -215,13 +213,13 @@ export const csr = {
 export const artikelIntro = {
   title: "Artikel",
   intro:
-    "Catatan manajemen mengenai pengelolaan unit usaha, pembentukan tim, dan pembelajaran dari setiap cabang yang dibuka.",
+    "Tulisan tentang perusahaan holding, investasi, dan dunia usaha, disusun dari data dan sumber yang dapat diperiksa.",
   cta: { label: "Semua Artikel", href: "/artikel" } satisfies Cta,
   listTitle: "Seluruh artikel",
-  featuredLabel: "Artikel terbaru",
+  featuredLabel: "Artikel pilihan",
   readCta: "Baca artikel",
   listIntro:
-    "Catatan keputusan, evaluasi program, dan pembelajaran manajemen dari pengelolaan empat unit usaha di tujuh cabang.",
+    "Holding dan investor, sumber modal, UMKM, hingga suksesi bisnis keluarga. Setiap angka disertai sumbernya.",
   author: "Manajemen PT Badiuzzaman Cipta Amani",
 }
 
@@ -249,7 +247,7 @@ export const timeline = {
     "Sepuluh tahun pertumbuhan yang dibangun secara bertahap. Setiap unit dan cabang baru dibuka setelah unit sebelumnya memenuhi indikator kinerja yang ditetapkan.",
   items: [
     {
-      year: "2016",
+      year: "2022",
       title: "Amani Laundry didirikan",
       body: "Cabang pertama dibuka di Jakarta Selatan dengan fokus pada segmen rumah tangga dan hunian kos. Prosedur operasional baku disusun sejak hari pertama.",
       image:
@@ -275,7 +273,7 @@ export const timeline = {
     {
       year: "2021",
       title: "Warkop Amani dibuka",
-      body: "Unit ketiga dikembangkan sebagai kedai kopi dengan standar kebersihan dan konsistensi layanan yang sama dengan unit jasa.",
+      body: "Unit ketiga dibuka sebagai kedai kopi dan makanan sekaligus tempat seru untuk bermain dan berkumpul, dengan standar kebersihan yang sama dengan unit jasa.",
       image:
         "https://images.unsplash.com/photo-1453614512568-c4024d13c247?auto=format&fit=crop&w=800&q=80",
       alt: "Kedai Warkop Amani",
@@ -291,10 +289,10 @@ export const timeline = {
     {
       year: "2023",
       title: "PAT dibentuk",
-      body: "Fungsi pengadaan dan logistik seluruh unit dipusatkan pada unit keempat, dengan kebijakan prioritas pemasok lokal terverifikasi.",
+      body: "Unit keempat dibentuk untuk melayani jasa pembuatan sumur bor bagi rumah tangga, masjid, dan tempat usaha di Sukabumi dan sekitarnya.",
       image:
         "https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?auto=format&fit=crop&w=800&q=80",
-      alt: "Gudang dan logistik PAT",
+      alt: "Pekerjaan sumur bor PAT",
     },
     {
       year: "2025",
@@ -409,7 +407,7 @@ export const seo = {
   artikel: {
     title: "Artikel — PT Badiuzzaman Cipta Amani",
     description:
-      "Catatan manajemen PT Badiuzzaman Cipta Amani mengenai tata kelola, keuangan, talenta, dan rantai pasok.",
+      "Artikel PT Badiuzzaman Cipta Amani tentang perusahaan holding, investor, sumber modal usaha, UMKM, dan bisnis keluarga.",
   },
   contact: {
     title: "Hubungi Kami — PT Badiuzzaman Cipta Amani",

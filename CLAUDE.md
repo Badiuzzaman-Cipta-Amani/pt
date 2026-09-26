@@ -45,7 +45,7 @@ that name. Copy is Bahasa Indonesia.
 | `/about`             | `pages/about.astro`             | header, `#visi`, `#misi`, `#sejarah` (timeline), `#tim`, investor CTA                 |
 | `/unit-usaha`        | `pages/unit-usaha/index.astro`  | header, four `UnitCard`s, kemitraan CTA                                               |
 | `/unit-usaha/[slug]` | `pages/unit-usaha/[slug].astro` | one unit, no dark header (`solidNav`): logo, description, facts, website, socials     |
-| `/artikel`           | `pages/artikel/index.astro`     | plain header; latest article as a wide highlighted card, the rest in a grid           |
+| `/artikel`           | `pages/artikel/index.astro`     | plain header; first article as a wide highlighted card, the rest in a grid            |
 | `/artikel/[slug]`    | `pages/artikel/[slug].astro`    | article body + three related, `Article` JSON-LD                                       |
 | `/contact`           | `pages/contact.astro`           | `mailto:` form + direct channels; `?topic=` preselects the topic                      |
 
@@ -69,10 +69,12 @@ There is deliberately **no investor page**: the mockups had one, it was dropped,
   new logo must be trimmed too or it will sit small in its tile — the tile
   (`logo-tile`) is a fixed box with `object-fit: contain`, so aspect ratios can differ.
 - **`src/content/articles/*.md`** — the articles, a content collection defined in
-  `src/content.config.ts` (`title`, `date`, `category`, `excerpt`, `image`). The file
-  name is the slug. Adding an article is adding a file; `src/lib/articles.ts` sorts
-  newest-first (`getArticles()`), formats dates in `id-ID` (`formatDate()`), and rewrites
-  Unsplash widths (`imageAt()`).
+  `src/content.config.ts` (`title`, `date`, `category`, `excerpt`, `image`, optional
+  `featured`). The file name is the slug. Adding an article is adding a file;
+  `src/lib/articles.ts` sorts `featured: true` first, then newest-first (`getArticles()`),
+  so a featured article is the highlighted card on `/artikel`, leads the home rail and
+  shows up in every other article's related three. It also formats dates in `id-ID`
+  (`formatDate()`) and rewrites Unsplash widths (`imageAt()`).
 - **`src/layouts/Layout.astro`** — the only layout. Props `title`, `description`,
   `solidNav`, `ogImage`; a `head` slot for page-level JSON-LD. Head: `<Seo>` from
   `astro-seo-meta`, canonical, Organization JSON-LD via `astro-seo-schema`, the Outfit
@@ -107,7 +109,7 @@ One module, imported by the layout, every block guarded on its elements:
   adds `.is-visible` once; `data-reveal-delay="100"` staggers (ms). Under
   `prefers-reduced-motion` everything is visible at rest.
 - **Counters** — `[data-count]` (+ optional `data-suffix`) run 0 → value over 1.8s when
-  60% visible, formatted `id-ID` (`5.000`, `50 M`).
+  60% visible, formatted `id-ID` (`5.000`).
 - **Rail** — `.rail-prev` / `.rail-next` scroll the home article rail by one card.
 - The **contact form** has its own inline `<script>` in `contact.astro`: `?topic=`
   preselect, native validation, and a `mailto:` built from the fields — investor

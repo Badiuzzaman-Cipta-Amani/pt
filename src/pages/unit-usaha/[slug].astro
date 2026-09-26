@@ -54,10 +54,14 @@ const { unit } = Astro.props
             }
           </dl>
           <div class="mt-10 flex flex-wrap items-center gap-6">
-            <a href={unit.website} target="_blank" rel="noopener" class="btn btn-ink px-7 py-3.5">
-              Kunjungi situs
-              <ArrowUpRight class="h-4 w-4" stroke-width={1.5} />
-            </a>
+            {
+              unit.website && (
+                <a href={unit.website} target="_blank" rel="noopener" class="btn btn-ink px-7 py-3.5">
+                  Kunjungi situs
+                  <ArrowUpRight class="h-4 w-4" stroke-width={1.5} />
+                </a>
+              )
+            }
             <div class="flex gap-2">
               {
                 unit.socials.map(({ label, href, icon }) => (

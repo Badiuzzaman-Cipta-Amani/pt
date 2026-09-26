@@ -6,8 +6,8 @@ import { artikelIntro, pageHeaders, seo } from "@/data/site"
 import Layout from "@/layouts/Layout.astro"
 import { formatDate, getArticles, imageAt } from "@/lib/articles"
 
-// Plain page header; the latest article is highlighted as a wide card at the
-// top of the list, the rest follow in the grid.
+// Plain page header; the first article (featured, else latest) is highlighted as a
+// wide card at the top of the list, the rest follow in the grid.
 const [featured, ...rest] = await getArticles()
 ---
 

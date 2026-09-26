@@ -20,7 +20,8 @@ export interface Unit {
   summary: string
   description: string[]
   facts: [label: string, value: string][]
-  website: string
+  // Leave out when the unit has no site yet: the "Kunjungi situs" button is hidden.
+  website?: string
   socials: { label: string; href: string; icon: SocialIconName }[]
 }
 
@@ -38,18 +39,18 @@ export const units: Unit[] = [
       "Layanan tersedia untuk segmen rumah tangga, hunian kos, perhotelan, dan fasilitas kesehatan. Untuk klien korporasi, Amani Laundry menyediakan perjanjian tingkat layanan (SLA) dengan jadwal penjemputan tetap, laporan kualitas bulanan, dan satu narahubung khusus.",
     ],
     facts: [
-      ["Berdiri", "2016"],
-      ["Cabang", "3 cabang"],
+      ["Berdiri", "2022"],
+      ["Cabang", "4 cabang"],
       ["Segmen", "Rumah tangga, kos, hotel, klinik"],
     ],
-    website: "https://laundry.amanigroup.co.id",
+    website: "https://amanilaundry.net",
     socials: [
       {
         label: "Instagram",
         href: "https://instagram.com/amanilaundry",
         icon: "instagram",
       },
-      { label: "WhatsApp", href: "https://wa.me/62215550123", icon: "whatsapp" },
+      { label: "WhatsApp", href: "https://wa.me/6285353896139", icon: "whatsapp" },
     ],
   },
   {
@@ -65,71 +66,70 @@ export const units: Unit[] = [
       "Klien utama unit ini adalah pengurus masjid, pengelola gedung perkantoran, dan hunian. Setiap pekerjaan didokumentasikan dengan foto sebelum dan sesudah, serta berita acara serah terima yang ditandatangani kedua pihak.",
     ],
     facts: [
-      ["Berdiri", "2019"],
-      ["Cabang", "2 cabang"],
+      ["Berdiri", "2026"],
+      ["Cabang", "1 cabang"],
       ["Segmen", "Masjid, perkantoran, hunian"],
     ],
     website: "https://karpet.amanigroup.co.id",
     socials: [
       {
         label: "Instagram",
-        href: "https://instagram.com/amanikarpet",
+        href: "https://instagram.com/amanilaundrykarpet",
         icon: "instagram",
       },
-      { label: "WhatsApp", href: "https://wa.me/62215550123", icon: "whatsapp" },
+      { label: "WhatsApp", href: "https://wa.me/6285177837707", icon: "whatsapp" },
     ],
   },
   {
     slug: "warkop-amani",
     name: "Warkop Amani",
-    sector: "Kedai kopi dan layanan konsumsi",
+    sector: "Kedai kopi, makanan, dan tempat bermain",
     logo: warkopAmani,
     logoClass: "w-26 h-auto",
     summary:
-      "Kedai kopi dengan menu harian berharga terjangkau, ruang yang layak untuk bekerja dan bertemu.",
+      "Kedai kopi dan makanan dengan harga terjangkau, sekaligus tempat seru untuk bermain dan berkumpul.",
     description: [
-      "Warkop Amani dikembangkan sebagai kedai kopi dengan standar kebersihan, konsistensi rasa, dan pelayanan yang terukur. Seluruh bahan baku dipasok melalui PAT dari mitra lokal yang telah melalui proses verifikasi mutu.",
-      "Selain layanan kedai, Warkop Amani menyediakan layanan konsumsi rapat dan acara untuk klien korporasi dengan kontrak berkala, sehingga kebutuhan konsumsi dapat direncanakan dan dianggarkan secara pasti.",
+      "Warkop Amani adalah kedai kopi dan makanan yang menyajikan menu harian dengan harga terjangkau. Setiap sajian, dari kopi hingga makanan, disiapkan dengan standar kebersihan dan konsistensi rasa yang sama setiap hari.",
+      "Lebih dari sekadar tempat makan dan minum, Warkop Amani adalah tempat yang seru untuk bermain dan berkumpul, cocok untuk bersantai bersama teman, keluarga, maupun komunitas.",
     ],
     facts: [
-      ["Berdiri", "2021"],
+      ["Berdiri", "2025"],
       ["Cabang", "1 cabang"],
-      ["Segmen", "Umum, korporasi"],
+      ["Segmen", "Umum, keluarga, komunitas"],
     ],
-    website: "https://warkop.amanigroup.co.id",
     socials: [
       {
         label: "Instagram",
-        href: "https://instagram.com/warkopamani",
+        href: "https://www.instagram.com/warkopamani",
         icon: "instagram",
       },
-      { label: "WhatsApp", href: "https://wa.me/62215550123", icon: "whatsapp" },
+      { label: "WhatsApp", href: "https://wa.me/6285177837706", icon: "whatsapp" },
     ],
   },
   {
     slug: "pat",
     name: "Putra Amani Teknik",
-    sector: "Pengadaan, logistik, dan pasokan lintas unit",
+    sector: "Jasa sumur bor",
     logo: pat,
     logoClass: "w-60 h-auto",
-    summary: "Pengadaan jasa sumur bor terstandar di Sukabumi.",
+    summary: "Jasa pembuatan sumur bor terstandar di Sukabumi.",
     description: [
-      "PAT dibentuk untuk memusatkan fungsi pengadaan dan logistik seluruh unit usaha PT Badiuzzaman Cipta Amani. Dengan konsolidasi pembelian, grup memperoleh posisi tawar yang lebih baik terhadap pemasok dan pengendalian mutu bahan yang lebih ketat.",
-      "PAT juga melayani klien eksternal untuk pengadaan perlengkapan rutin dan jasa logistik. Seluruh transaksi didukung dokumen penawaran, kontrak, dan laporan penyerahan yang lengkap.",
+      "Putra Amani Teknik (PAT) adalah unit usaha PT Badiuzzaman Cipta Amani yang bergerak di bidang jasa sumur bor. PAT menangani pembuatan sumur bor untuk kebutuhan air bersih rumah tangga, masjid, dan tempat usaha di Sukabumi dan sekitarnya.",
+      "Setiap pekerjaan diawali survei lokasi dan penawaran tertulis, lalu didokumentasikan hingga serah terima, sehingga lingkup pekerjaan, biaya, dan jadwal sudah jelas sejak awal.",
     ],
     facts: [
-      ["Berdiri", "2023"],
+      ["Berdiri", "2025"],
       ["Cabang", "1 cabang"],
-      ["Segmen", "Internal grup, korporasi, institusi"],
+      ["Segmen", "Rumah tangga, masjid, tempat usaha"],
     ],
-    website: "https://pat.amanigroup.co.id",
+    website: "https://putraamaniteknik.com",
     socials: [
       {
-        label: "LinkedIn",
-        href: "https://linkedin.com/company/amanigroup",
-        icon: "linkedin",
+        label: "Instagram",
+        href: "https://www.instagram.com/sumurborsukabumi",
+        icon: "instagram",
       },
-      { label: "WhatsApp", href: "https://wa.me/62215550123", icon: "whatsapp" },
+      { label: "WhatsApp", href: "https://wa.me/6282124616909", icon: "whatsapp" },
     ],
   },
 ]

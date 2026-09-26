@@ -775,32 +775,31 @@ export const navLinks: Cta[] = [
 ]
 
 export const contact = {
-  address: ["Jl. Raya Amani No. 12", "Jakarta Selatan 12560"],
-  email: "halo@amanigroup.co.id",
-  investorEmail: "investor@amanigroup.co.id",
-  phone: "+62 21 5555 0123",
-  whatsapp: "https://wa.me/62215550123",
+  address: ["Ruko Bumi Asri Jl. Cikiray Kidul No.A6, Sukamanah, Kec. Cisaat, Kabupaten Sukabumi", "Jawa Barat 43152"],
+  email: "badiuzzamanentrepreneur@gmail.com",
+  investorEmail: "admin@badiuzzaman.com",
+  phone: "+62 851 7826 1908",
+  whatsapp: "https://wa.me/6285178261908",
   whatsappPrefilled:
-    "https://wa.me/62215550123?text=Halo%20Amani%20Group%2C%20saya%20ingin%20bertanya%20mengenai%20",
-  instagramHandle: "@amanigroup",
-  instagram: "https://instagram.com/amanigroup",
+    "https://wa.me/6285178261908?text=Halo%20PT%20Badiuzzaman%2C%20saya%20ingin%20bertanya%20mengenai%20",
+  instagramHandle: "@badiuzzamanentrepreneur",
+  instagram: "https://instagram.com/badiuzzamanentrepreneur",
   hours: ["Senin – Jumat", "08.00 – 17.00 WIB"],
 }
 
 export const socials: { label: string; href: string; icon: SocialIconName }[] = [
-  { label: "Instagram", href: "https://instagram.com/amanigroup", icon: "instagram" },
-  {
-    label: "LinkedIn",
-    href: "https://linkedin.com/company/amanigroup",
-    icon: "linkedin",
-  },
-  { label: "YouTube", href: "https://youtube.com/@amanigroup", icon: "youtube" },
-  { label: "WhatsApp", href: "https://wa.me/62215550123", icon: "whatsapp" },
+  { label: "Instagram", href: "https://instagram.com/badiuzzamanentrepreneur", icon: "instagram" },
+  // {
+  //   label: "LinkedIn",
+  //   href: "https://linkedin.com/company/amanigroup",
+  //   icon: "linkedin",
+  // },
+  { label: "WhatsApp", href: "https://wa.me/6285178261908", icon: "whatsapp" },
 ]
 
 export const footerColumns: { title: string; links: Cta[] }[] = [
   {
-    title: "Perusahaan",
+    title: "Menu",
     links: [
       { label: "Tentang kami", href: "/about" },
       { label: "Visi & misi", href: "/about#misi" },
@@ -987,7 +986,7 @@ export const timeline = {
     "Sepuluh tahun pertumbuhan yang dibangun secara bertahap. Setiap unit dan cabang baru dibuka setelah unit sebelumnya memenuhi indikator kinerja yang ditetapkan.",
   items: [
     {
-      year: "2016",
+      year: "2022",
       title: "Amani Laundry didirikan",
       body: "Cabang pertama dibuka di Jakarta Selatan dengan fokus pada segmen rumah tangga dan hunian kos. Prosedur operasional baku disusun sejak hari pertama.",
       image:
@@ -1190,7 +1189,7 @@ export const units: Unit[] = [
       "Layanan tersedia untuk segmen rumah tangga, hunian kos, perhotelan, dan fasilitas kesehatan. Untuk klien korporasi, Amani Laundry menyediakan perjanjian tingkat layanan (SLA) dengan jadwal penjemputan tetap, laporan kualitas bulanan, dan satu narahubung khusus.",
     ],
     facts: [
-      ["Berdiri", "2016"],
+      ["Berdiri", "2022"],
       ["Cabang", "3 cabang"],
       ["Segmen", "Rumah tangga, kos, hotel, klinik"],
     ],

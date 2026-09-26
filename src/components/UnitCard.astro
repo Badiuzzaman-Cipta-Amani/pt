@@ -26,23 +26,27 @@ const href = `/unit-usaha/${unit.slug}`
   </a>
   <h3 class="t-card mt-8"><a href={href} class="hover:underline">{unit.name}</a></h3>
   <p class="t-body mt-3">{unit.summary}</p>
-  <div class="mt-auto flex flex-wrap items-center gap-3 pt-8">
-    {
-      withProfile && (
-        <a href={href} class="btn btn-ink px-5 py-2.5 text-sm">
-          Lihat profil
-          <ArrowRight class="arrow-right h-4 w-4" stroke-width={1.5} />
-        </a>
-      )
-    }
-    <a
-      href={unit.website}
-      target="_blank"
-      rel="noopener"
-      class="btn btn-ghost-ink px-5 py-2.5 text-sm"
-    >
-      Kunjungi situs
-      <ArrowUpRight class="arrow-up-right h-4 w-4" stroke-width={1.5} />
-    </a>
-  </div>
+  {
+    (withProfile || unit.website) && (
+      <div class="mt-auto flex flex-wrap items-center gap-3 pt-8">
+        {withProfile && (
+          <a href={href} class="btn btn-ink px-5 py-2.5 text-sm">
+            Lihat profil
+            <ArrowRight class="arrow-right h-4 w-4" stroke-width={1.5} />
+          </a>
+        )}
+        {unit.website && (
+          <a
+            href={unit.website}
+            target="_blank"
+            rel="noopener"
+            class="btn btn-ghost-ink px-5 py-2.5 text-sm"
+          >
+            Kunjungi situs
+            <ArrowUpRight class="arrow-up-right h-4 w-4" stroke-width={1.5} />
+          </a>
+        )}
+      </div>
+    )
+  }
 </article>
