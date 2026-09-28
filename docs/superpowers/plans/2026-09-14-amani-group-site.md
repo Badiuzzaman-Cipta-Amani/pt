@@ -776,7 +776,7 @@ export const navLinks: Cta[] = [
 
 export const contact = {
   address: ["Ruko Bumi Asri Jl. Cikiray Kidul No.A6, Sukamanah, Kec. Cisaat, Kabupaten Sukabumi", "Jawa Barat 43152"],
-  email: "badiuzzamanentrepreneur@gmail.com",
+  email: "badiuzzamanciptaamani@gmail.com",
   investorEmail: "admin@badiuzzaman.com",
   phone: "+62 851 7826 1908",
   whatsapp: "https://wa.me/6285178261908",
